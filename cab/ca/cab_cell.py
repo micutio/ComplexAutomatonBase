@@ -28,17 +28,17 @@ class CACell:
     def update(self):
         raise NotImplementedError("Method needs to be implemented")
 
-    def clone(self, x, y, c_size):
-        return CACell(x, y, c_size, self.gc)
+    def clone(self, x, y):
+        return CACell(x, y, self.gc)
 
 class CellRect(CACell):
     """
     This class extends the basic CACell class with methods for rectangular cells.
     """
-    def __init__(self, x, y, c_size, gc):
+    def __init__(self, x, y, gc):
         super().__init__(x, y, gc)
-        self.w = c_size
-        self.h = c_size
+        self.w = gc.CELL_SIZE
+        self.h = gc.CELL_SIZE
         
     def get_corners(self):
         corners = []
@@ -53,9 +53,9 @@ class CellHex(CACell):
     This class extends the basic CACell class with methods for hexagonal cells.
 
     """
-    def __init__(self, x, y, c_size, gc):
+    def __init__(self, x, y, gc):
         super().__init__(x, y, gc)
-        self.h = c_size * 2
+        self.h = gc.CELL_SIZE * 2
         self.vert = self.h * (3 / 4)
         self.w = self.h * (math.sqrt(3) / 2)     
         self.horiz = self.w
@@ -63,7 +63,9 @@ class CellHex(CACell):
         self.r = y
         self.z = -self.q - self.r
         self.rectangular = False
-        self.c_size = c_size
+        self.c_size = gc.CELL_SIZE
+
+        #self.directions = [(1, -1,  0), (1,  0, -1), ( 0, 1, -1), (-1, 1,  0), (-1,  0, 1), ( 0, -1, 1)]
 
         self.corners = []
         self.corners = self.get_corners()
