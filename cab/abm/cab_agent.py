@@ -5,13 +5,15 @@ This module contains all classes associated with the agents of the system.
 __author__ = 'Michael Wagner'
 
 import uuid
+from abc import ABCMeta, abstractmethod
 
 
-class CabAgent:
+class CabAgent(metaclass=ABCMeta):
     """
     Parent class for all agents.
     Every subclass has to implement the perceive_and_act() method.
     """
+
     def __init__(self, x, y, gc):
         self.a_id = uuid.uuid4().urn
         self.x = x
@@ -25,5 +27,6 @@ class CabAgent:
     def clone(self, x, y):
         return CabAgent(x, y, self.gc)
 
+    @abstractmethod
     def perceive_and_act(self, ca, abm):
         raise NotImplementedError("Method needs to be implemented")

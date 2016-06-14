@@ -29,12 +29,12 @@ class CARect:
         if proto_cell is None:
             for j in range(0, self.height):
                 for i in range(0, self.width):
-                    self.ca_grid[i, j] = CellRect(i, j, gc.CELL_SIZE, gc)
+                    self.ca_grid[i, j] = CellRect(i, j, gc)
         else:
             self.proto_cell = proto_cell
             for j in range(0, self.height):
                 for i in range(0, self.width):
-                    self.ca_grid[i, j] = proto_cell.clone(i, j, gc.CELL_SIZE)
+                    self.ca_grid[i, j] = proto_cell.clone(i, j, gc)
 
         if self.use_moore_neighborhood:
             self.init_moore()

@@ -5,9 +5,10 @@ This module contains all classes associated with the CA cells.
 __author__ = 'Michael Wagner'
 
 import math
+from abc import ABCMeta, abstractmethod
 
 
-class CACell:
+class CACell(metaclass=ABCMeta):
     """
     This class models one cell of the CA, while the grid itself will be a dictionary of ClassCell instances.
     """
@@ -22,14 +23,18 @@ class CACell:
     def set_neighbors(self, neighbors):
         self.neighbors = neighbors
 
+    @abstractmethod
     def sense_neighborhood(self):
         raise NotImplementedError("Method needs to be implemented")
 
+    @abstractmethod
     def update(self):
         raise NotImplementedError("Method needs to be implemented")
 
+    @abstractmethod
     def clone(self, x, y):
         return CACell(x, y, self.gc)
+
 
 class CellRect(CACell):
     """
@@ -88,7 +93,7 @@ class CellHex(CACell):
     def get_cube(self):
         return self.x, self.y, self.z
 
-    def distance_to(neighbor):
+    def distance_to(self, neighbor):
         x1, y1, z1 = self.get_cube()
         x2, y2, z2 = neighbor.get_cube()
         return max(abs(x1 - x2), abs(y1 - y2), abs(z1 - z2))

@@ -49,9 +49,9 @@ class ComplexAutomaton:
         # pygame.gfxdraw.filled_circle(self.screen, 50, 50, 10 - 2, (0,0,0))
 
         if 'proto_visualizer' in kwargs:
-            self.visualizer = kwargs['proto_visualizer'].clone(self.screen)
+            self.visualizer = kwargs['proto_visualizer'].clone(self.gc, self.screen, self)
         else:
-            self.visualizer = Visualization(self.gc, self.screen)
+            self.visualizer = Visualization(self.gc, self.screen, self)
 
         if 'proto_cell' in kwargs:
             if self.gc.USE_HEX_CA:

@@ -9,6 +9,9 @@ import sys
 
 
 class InputHandler:
+    """
+    This class incorporates all methods necessary for controlling the simulation.
+    """
     def __init__(self, cab_system):
         self.mx = 0
         self.my = 0
@@ -62,11 +65,11 @@ class InputHandler:
         """
         # Click on left mouse button.
         if button == 1:
-            raise NotImplementedError
+            pass
 
         # Click on right mouse button
         elif button == 3:
-            raise NotImplementedError
+            pass
 
     def def_keyboard_action(self, active_key):
         """
@@ -82,7 +85,7 @@ class InputHandler:
         # Simulation Standard: 'r' resets the simulation
         if active_key == pygame.K_r:
             self.sys.reset_simulation()
-            print(" > simulation reset")
+            print(" < simulation reset")
 
         # Simulation Standard: 's' advances the simulation by one step
         if active_key == pygame.K_s:

@@ -12,7 +12,8 @@ class Visualization:
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc, surface):
+
+    def __init__(self, gc, surface, sys):
         """
         Initializes the visualization and passes the surface on which to draw.
         :param surface: Pygame surface object.
@@ -22,15 +23,16 @@ class Visualization:
         else:
             self.surface = surface
         self.gc = gc
+        self.sys = sys
 
-    def clone(self, surface):
-        return Visualization(self.gc, surface)
+    def clone(self, surface, sys):
+        return Visualization(self.gc, surface, sys)
 
     def draw_agent(self, agent):
         """
         Simple exemplary visualization. Draw agent as a black circle
         """
-        raise NotImplementedError("Method needs to be implemented")
+        print('cab_visualization.draw_agent(self, agent) has not been overriden. Agents cannot be displayed.')
 
     def draw_cell(self, cell):
         """
