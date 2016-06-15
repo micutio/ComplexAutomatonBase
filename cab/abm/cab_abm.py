@@ -15,14 +15,13 @@ class ABM:
         :param gc: Global Constants, Parameters for the ABM.
         :return: An initialized ABM.
         """
-        self.agent_list = []
-        self.agent_locations = {}
+        self.agent_set = set()
+        self.agent_locations = dict()
         self.visualizer = visualizer
         self.gc = gc
-
+        self.new_agents = []
         if not proto_agent is None:
             self.add_agent(proto_agent)
-            self.agent_list = [proto_agent]
 
     def cycle_system(self, ca):
         """
@@ -30,26 +29,48 @@ class ABM:
         """
         # Have all agents perceive and act in a random order
         # While we're at it, look for dead agents to remove
-        for a in self.agent_list:
+        changed_agents = []
+        for a in self.agent_set:
             a.perceive_and_act(ca, self)
-        self.agent_list = [agent for agent in self.agent_list if not agent.dead]
+            if a.x != a.prev_x or a.y != a.prev_y:
+                changed_agents.append(a)
+        self.update_agent_positions(changed_agents)
+        self.schedule_new_agents()
+        self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
+
+    def update_agent_positions(self, changed_agents):
+        for agent in changed_agents:
+            if self.gc.ONE_AGENT_PER_CELL:
+                self.agent_locations.pop((agent.prev_x, agent.prev_y))
+                self.agent_locations[agent.x, agent.y] = agent
+            else:
+                self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
+                try:
+                    self.agent_locations[agent.x, agent.y].add(agent)
+                except KeyError:
+                    self.agent_locations[agent.x, agent.y] = set([agent])
 
     def add_agent(self, agent):
+        self.new_agents.append(agent)
+
+    def schedule_new_agents(self):
         """
         Adds an agent to be scheduled by the abm.
         """
-        pos = (agent.x, agent.y)
-        self.agent_list.append(agent)
-        if agent.x != None and agent.y != None:
-            if self.gc.ONE_AGENT_PER_CELL:
-                if not pos in self.agent_locations:
-                    self.agent_locations[pos] = agent
-                # Can't insert agent if cell is already occupied.
-            else:
-                if pos in self.agent_locations:
-                    self.agent_locations[pos].append(agent)
+        for agent in self.new_agents:
+            pos = (agent.x, agent.y)
+            self.agent_set.add(agent)
+            if agent.x != None and agent.y != None:
+                if self.gc.ONE_AGENT_PER_CELL:
+                    if not pos in self.agent_locations:
+                        self.agent_locations[pos] = agent
+                    # Can't insert agent if cell is already occupied.
                 else:
-                    self.agent_locations[pos] = [agent]
+                    if pos in self.agent_locations:
+                        self.agent_locations[pos].add(agent)
+                    else:
+                        self.agent_locations[pos] = set([agent])
+        self.new_agents = list()
 
     def remove_agent(self, agent):
         """
@@ -74,5 +95,5 @@ class ABM:
         Iterates over all agents and hands them over to the visualizer.
         """
         draw = self.visualizer.draw_agent
-        for a in self.agent_list:
+        for a in self.agent_set:
             draw(a)

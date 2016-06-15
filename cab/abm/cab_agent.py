@@ -24,9 +24,6 @@ class CabAgent(metaclass=ABCMeta):
         self.gc = gc
         self.dead = False
 
-    def clone(self, x, y):
-        return CabAgent(x, y, self.gc)
-
     @abstractmethod
     def perceive_and_act(self, ca, abm):
         raise NotImplementedError("Method needs to be implemented")
