@@ -37,6 +37,9 @@ class ABM:
         self.update_agent_positions(changed_agents)
         self.schedule_new_agents()
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
+        dead_agents = [agent for agent in self.agent_set if agent.dead]
+        for agent in dead_agents:
+            self.remove_agent(agent)
 
     def update_agent_positions(self, changed_agents):
         for agent in changed_agents:

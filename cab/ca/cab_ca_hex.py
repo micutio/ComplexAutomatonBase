@@ -7,6 +7,7 @@ __author__ = 'Michael Wagner'
 from cab.ca.cab_cell import CellHex
 
 import math
+import random
 
 
 class CAHex:
@@ -59,6 +60,14 @@ class CAHex:
 
     # Common Interface for all CA classes
 
+    def set_cell_neighborhood(self, cell):
+        cx, cy, cz = cell.get_cube()
+        for d in self.gc.HEX_DIRECTIONS:
+            x = cx + d[0]
+            y = cy + d[1]
+            if (x, y) in self.ca_grid:
+                cell.neighbors.append(self.ca_grid[x, y])
+
     def draw_cells(self):
         """
         Simply iterating over all cells and calling their draw() method.
@@ -87,7 +96,7 @@ class CAHex:
 
     def get_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
         """
-        Creates a dictionary {'position': (cell, [agents on that cell])} where position is an (x,y) tuple
+        Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
         """
         if dist == None:
@@ -102,12 +111,12 @@ class CAHex:
                 grid_x = x + i
                 grid_y = y + j
                 if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-                    a = self.ca_grid[grid_x, grid_y]
+                    neigh_cell = self.ca_grid[grid_x, grid_y]
                     if (grid_x, grid_y) not in other_agents:
-                        b = False
+                        neigh_agents = False
                     else:
-                        b = other_agents[grid_x, grid_y]
-                    neighborhood[grid_x, grid_y] = (a, b)
+                        neigh_agents = other_agents[grid_x, grid_y]
+                    neighborhood[grid_x, grid_y] = (neigh_cell, neigh_agents)
         return neighborhood
 
     def get_empty_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
@@ -127,20 +136,12 @@ class CAHex:
                 grid_x = x + i
                 grid_y = y + j
                 if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-                    a = self.ca_grid[grid_x, grid_y]
+                    neigh_cell = self.ca_grid[grid_x, grid_y]
                     if (grid_x, grid_y) not in other_agents:
-                        neighborhood[grid_x, grid_y] = a
+                        neighborhood[grid_x, grid_y] = neigh_cell
                     else:
                         continue
-                    
         return neighborhood
 
-    # Individual methods for this specific CA
-
-    def set_cell_neighborhood(self, cell):
-        cx, cy, cz = cell.get_cube()
-        for d in self.gc.HEX_DIRECTIONS:
-            x = cx + d[0]
-            y = cy + d[1]
-            if (x, y) in self.ca_grid:
-                cell.neighbors.append(self.ca_grid[x, y])
+    def get_random_valid_position(self):
+        return random.choice(list(self.ca_grid.keys()))
