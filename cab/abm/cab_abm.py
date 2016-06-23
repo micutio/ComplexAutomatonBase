@@ -79,19 +79,13 @@ class ABM:
         """
         Removes an agent from the system.
         """
-        a_index = -1
         if self.gc.ONE_AGENT_PER_CELL:
             if self.agent_locations[agent.x, agent.y].a_id == agent.a_id:
                 del(self.agent_locations[agent.x, agent.y])
         else:
-            for a in self.agent_locations[agent.x, agent.y]:
-                if a.a_id == agent.a_id:
-                    a_index = self.agent_locations[agent.x, agent.y].index(a)
-                    break
-            if a_index != -1:
-                self.agent_locations[agent.x, agent.y].pop(a_index)
-                if len(self.agent_locations[agent.x, agent.y]) == 0:
-                    del(self.agent_locations[agent.x, agent.y])
+            self.agent_locations[agent.x, agent.y].discard(agent)
+            if len(self.agent_locations[agent.x, agent.y]) == 0:
+                del(self.agent_locations[agent.x, agent.y])
 
     def draw_agents(self):
         """
