@@ -145,3 +145,65 @@ class CAHex:
 
     def get_random_valid_position(self):
         return random.choice(list(self.ca_grid.keys()))
+
+    @staticmethod
+    def hex_round(q, r):
+        return CAHex.cube_to_hex(*CAHex.cube_round(*CAHex.hex_to_cube(q, r)))
+
+    @staticmethod
+    def cube_round(x, y, z):
+        rx = round(x)
+        ry = round(y)
+        rz = round(z)
+        dx = abs(rx - x)
+        dy = abs(ry - y)
+        dz = abs(rz - z)
+
+        if dx > dy and dx > dz:
+            rx = -ry - rz
+        elif dy > dz:
+            ry = -rx - rz
+        else:
+            rz = -rx - ry
+
+        return rx, ry, rz
+
+    @staticmethod
+    def cube_to_hex(x, y, z):
+        return x, y
+
+    @staticmethod
+    def hex_to_cube(q, r):
+        z = -q - r
+        return q, r, z
+
+    @staticmethod
+    def hex_distance(q1, r1, q2, r2):
+        return (abs(q1 - q2) +
+            abs(q1 + r1 - q2 - r2) +
+            abs(r1 - r2)) / 2
+
+    @staticmethod
+    def cube_distance(cell_a, cell_b):
+        return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y),
+            abs(cell_a.z - cell_b.z))
+
+    @staticmethod
+    def get_direction_from_to(q1, r1, q2, r2):
+        pass
+
+    @staticmethod
+    def float_interp(a, b, t):
+        return a + (b - a) * t
+
+    @staticmethod
+    def cube_interp(a, b, t):
+        x = CAHex.float_interp(a.x, b.x, t)
+        y = CAHex.float_interp(a.y, b.y, t)
+        z = CAHex.float_interp(a.z, b.z, t)
+        return x, y, z
+
+    @staticmethod
+    def get_cell_in_direction(a, b):
+        N = cube_distance(a, b)
+        return cube_round(cube_lerp(a, b, 1))
