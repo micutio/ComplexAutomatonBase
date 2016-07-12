@@ -193,17 +193,19 @@ class CAHex:
         pass
 
     @staticmethod
-    def float_interp(a, b, t):
+    def float_interpolate(a, b, t):
         return a + (b - a) * t
 
     @staticmethod
-    def cube_interp(a, b, t):
-        x = CAHex.float_interp(a.x, b.x, t)
-        y = CAHex.float_interp(a.y, b.y, t)
-        z = CAHex.float_interp(a.z, b.z, t)
+    def cube_interpolate(a, b, t):
+        x = CAHex.float_interpolate(a.x, b.x, t)
+        y = CAHex.float_interpolate(a.y, b.y, t)
+        z = CAHex.float_interpolate(a.z, b.z, t)
         return x, y, z
 
     @staticmethod
     def get_cell_in_direction(a, b):
-        N = cube_distance(a, b)
-        return cube_round(cube_lerp(a, b, 1))
+        N = CAHex.cube_distance(a, b)
+        _x, _y, _z = CAHex.cube_interpolate(a, b, 1)
+        _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
+        return _q, _r
