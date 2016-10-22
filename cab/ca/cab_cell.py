@@ -2,10 +2,12 @@
 This module contains all classes associated with the CA cells.
 """
 
-__author__ = 'Michael Wagner'
 
 import math
 from abc import ABCMeta, abstractmethod
+
+
+__author__ = 'Michael Wagner'
 
 
 class CACell(metaclass=ABCMeta):
@@ -40,24 +42,36 @@ class CellRect(CACell):
     """
     This class extends the basic CACell class with methods for rectangular cells.
     """
+
     def __init__(self, x, y, gc):
         super().__init__(x, y, gc)
         self.w = gc.CELL_SIZE
         self.h = gc.CELL_SIZE
         
     def get_corners(self):
-        corners = []
+        corners = list()
         corners.append((self.x * self.w, self.y * self.h))
         corners.append((self.x * self.w + self.w, self.y * self.h))
         corners.append((self.x * self.w + self.w, self.y * self.h + self.h))
         corners.append((self.x * self.w, self.y * self.h + self.h))
         return corners
 
+    def clone(self, x, y):
+        pass
+
+    def update(self):
+        pass
+
+    def sense_neighborhood(self):
+        pass
+
+
 class CellHex(CACell):
     """
     This class extends the basic CACell class with methods for hexagonal cells.
 
     """
+
     def __init__(self, x, y, gc):
         super().__init__(x, y, gc)
         self.h = gc.CELL_SIZE * 2
@@ -70,7 +84,7 @@ class CellHex(CACell):
         self.rectangular = False
         self.c_size = gc.CELL_SIZE
 
-        #self.directions = [(1, -1,  0), (1,  0, -1), ( 0, 1, -1), (-1, 1,  0), (-1,  0, 1), ( 0, -1, 1)]
+        # self.directions = [(1, -1,  0), (1,  0, -1), ( 0, 1, -1), (-1, 1,  0), (-1,  0, 1), ( 0, -1, 1)]
 
         self.corners = []
         self.corners = self.get_corners()
@@ -97,3 +111,12 @@ class CellHex(CACell):
         x1, y1, z1 = self.get_cube()
         x2, y2, z2 = neighbor.get_cube()
         return max(abs(x1 - x2), abs(y1 - y2), abs(z1 - z2))
+
+    def clone(self, x, y):
+        pass
+
+    def update(self):
+        pass
+
+    def sense_neighborhood(self):
+        pass

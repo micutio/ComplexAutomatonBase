@@ -2,10 +2,12 @@
 This module contains all classes associated with the agents of the system.
 """
 
-__author__ = 'Michael Wagner'
 
 import uuid
 from abc import ABCMeta, abstractmethod
+
+
+__author__ = 'Michael Wagner'
 
 
 class CabAgent(metaclass=ABCMeta):

@@ -2,10 +2,12 @@
 This module contains a generic InputHandler which handles all keyboard and mouse input to the simulation.
 """
 
-__author__ = 'Michael Wagner'
 
 import pygame
 import sys
+
+
+__author__ = 'Michael Wagner'
 
 
 class InputHandler:

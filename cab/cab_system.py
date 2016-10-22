@@ -3,9 +3,6 @@ ComplexAutomaton module of the Complex Automaton Base.
 Contains the automaton itself.
 """
 
-__author__ = 'Michael Wagner'
-
-
 import pygame
 import math
 
@@ -18,11 +15,16 @@ from cab.util.cab_visualization import Visualization
 from pygame.locals import *
 
 
+__author__ = 'Michael Wagner'
+
+
 class ComplexAutomaton:
     """
     The main class of Sugarscape. This controls everything.
     """
-    def __init__(self, global_constants, **kwargs):  #proto_cell=None, proto_agent=None, proto_visualizer=None, proto_handler=None):
+
+    def __init__(self, global_constants, **kwargs):
+        # proto_cell=None, proto_agent=None, proto_visualizer=None, proto_handler=None):
         """
         Standard initializer.
         :param global_constants: All constants or important variables that control the simulation.
@@ -40,7 +42,7 @@ class ComplexAutomaton:
             offset_x = self.gc.CELL_SIZE * self.gc.DIM_X
             offset_y = self.gc.CELL_SIZE * self.gc.DIM_Y
 
-        self.screen = pygame.display.set_mode((offset_x, offset_y), HWSURFACE|DOUBLEBUF, 32)
+        self.screen = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
         pygame.display.set_caption('Complex Automaton Base')
 
         # pygame.gfxdraw.aacircle(self.screen, 50, 50, 10 + 10, (0,255,0))
@@ -82,13 +84,12 @@ class ComplexAutomaton:
         return
 
     def display_info(self):
-        print( "\n {0}, version {1}"
-               "\n keys:"
-               "\n        [SPACE] pause/resume simulation"
-               "\n          [S]   step simulation        "
-               "\n          [R]   reset simulation       "
-               "\n ".format(self.gc.TITLE, self.gc.VERSION))
-
+        print("\n {0}, version {1}"
+              "\n keys:"
+              "\n        [SPACE] pause/resume simulation"
+              "\n          [S]   step simulation        "
+              "\n          [R]   reset simulation       "
+              "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
         self.ca.__init__(self.gc, self.visualizer, self.proto_cell)

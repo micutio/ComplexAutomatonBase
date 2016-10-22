@@ -2,22 +2,23 @@
 This module contains the class for a CA with hexagonal cells in pointy top layout.
 """
 
-__author__ = 'Michael Wagner'
-
 from cab.ca.cab_cell import CellHex
 
 import math
 import random
 
+__author__ = 'Michael Wagner'
+
 
 class CAHex:
-    '''
+    """
     For reference go to "http://www.redblobgames.com/grids/hexagons/"
     Hex CA parameters:
     - even-r horizontal layout
     - cube coordinates for algorithms
     - axial coordinates for storage
-    '''
+    """
+
     def __init__(self, gc, visualizer, proto_cell=None):
         """
         Initializes and returns the cellular automaton.
@@ -43,7 +44,7 @@ class CAHex:
                     self.ca_grid[q, j] = CellHex(q, j, gc)
                     # print('x={0}, y={1}'.format(q, j))
                     if self.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
-                        self.ca_grid[q, j].is_border = True                    
+                        self.ca_grid[q, j].is_border = True
         else:
             self.proto_cell = proto_cell
             for j in range(0, self.height):
@@ -99,7 +100,7 @@ class CAHex:
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
         """
-        if dist == None:
+        if dist is None:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
@@ -124,7 +125,7 @@ class CAHex:
         Creates a dictionary {'position': cell} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
         """
-        if dist == None:
+        if dist is None:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
@@ -180,13 +181,13 @@ class CAHex:
     @staticmethod
     def hex_distance(q1, r1, q2, r2):
         return (abs(q1 - q2) +
-            abs(q1 + r1 - q2 - r2) +
-            abs(r1 - r2)) / 2
+                abs(q1 + r1 - q2 - r2) +
+                abs(r1 - r2)) / 2
 
     @staticmethod
     def cube_distance(cell_a, cell_b):
         return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y),
-            abs(cell_a.z - cell_b.z))
+                   abs(cell_a.z - cell_b.z))
 
     @staticmethod
     def get_direction_from_to(q1, r1, q2, r2):
@@ -205,7 +206,7 @@ class CAHex:
 
     @staticmethod
     def get_cell_in_direction(a, b):
-        N = CAHex.cube_distance(a, b)
+        # N = CAHex.cube_distance(a, b)
         _x, _y, _z = CAHex.cube_interpolate(a, b, 1)
         _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
         return _q, _r

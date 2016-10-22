@@ -1,5 +1,5 @@
 """
-Put a short description here
+Simulation and model constants. These are supposed to be accessible project-wide.
 """
 
 __author__ = 'Michael Wagner'

@@ -1,17 +1,19 @@
 """
 This module contains a simple visualization class, which the actual simulation visualizer should inherit from.
 """
-__author__ = 'Michael Wagner'
+
 
 import pygame
 import pygame.gfxdraw
+
+
+__author__ = 'Michael Wagner'
 
 
 class Visualization:
     """
     This class incorporates all methods necessary for visualizing the simulation.
     """
-
 
     def __init__(self, gc, surface, sys):
         """

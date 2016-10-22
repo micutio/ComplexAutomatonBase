@@ -20,7 +20,7 @@ class ABM:
         self.visualizer = visualizer
         self.gc = gc
         self.new_agents = []
-        if not proto_agent is None:
+        if proto_agent is not None:
             self.add_agent(proto_agent)
 
     def cycle_system(self, ca):
@@ -51,7 +51,7 @@ class ABM:
                 try:
                     self.agent_locations[agent.x, agent.y].add(agent)
                 except KeyError:
-                    self.agent_locations[agent.x, agent.y] = set([agent])
+                    self.agent_locations[agent.x, agent.y] = {agent}  # set([agent])
 
     def add_agent(self, agent):
         self.new_agents.append(agent)
@@ -63,16 +63,16 @@ class ABM:
         for agent in self.new_agents:
             pos = (agent.x, agent.y)
             self.agent_set.add(agent)
-            if agent.x != None and agent.y != None:
+            if agent.x is not None and agent.y is not None:
                 if self.gc.ONE_AGENT_PER_CELL:
-                    if not pos in self.agent_locations:
+                    if pos not in self.agent_locations:
                         self.agent_locations[pos] = agent
                     # Can't insert agent if cell is already occupied.
                 else:
                     if pos in self.agent_locations:
                         self.agent_locations[pos].add(agent)
                     else:
-                        self.agent_locations[pos] = set([agent])
+                        self.agent_locations[pos] = {agent}
         self.new_agents = list()
 
     def remove_agent(self, agent):

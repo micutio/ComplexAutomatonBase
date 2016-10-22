@@ -3,9 +3,11 @@ This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
 
-__author__ = 'Michael Wagner'
 
 from cab.ca.cab_cell import CellRect
+
+
+__author__ = 'Michael Wagner'
 
 
 class CARect:
