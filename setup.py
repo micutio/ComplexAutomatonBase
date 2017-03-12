@@ -6,5 +6,5 @@ setup(name='ComplexAutomatonBase',
       author='Michael Wagner',
       author_email='wagner.mchl@googlemail.com',
       url='https://github.com/micutio/ComplexAutomatonBase',
-      packages=['cab', 'cab/abm', 'cab/ca', 'cab/util'], requires=['pygame']
+      packages=['cab', 'cab/abm', 'cab/ca', 'cab/util'], requires=['pygame', 'matplotlib']
       )
