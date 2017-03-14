@@ -14,6 +14,7 @@ from cab.util.cab_visualization import Visualization
 
 from pygame.locals import *
 
+from cab_global_constants import GlobalConstants
 
 __author__ = 'Michael Wagner'
 
@@ -23,11 +24,12 @@ class ComplexAutomaton:
     The main class of Sugarscape. This controls everything.
     """
 
-    def __init__(self, global_constants, **kwargs):
+    def __init__(self, global_constants: GlobalConstants, **kwargs):
         # proto_cell=None, proto_agent=None, proto_visualizer=None, proto_handler=None):
         """
         Standard initializer.
         :param global_constants: All constants or important variables that control the simulation.
+        :param kwargs**: cell prototype, agent prototype, visualizer prototype and IO handler prototype.
         """
         self.gc = global_constants
 
