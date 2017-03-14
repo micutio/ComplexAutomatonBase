@@ -47,11 +47,6 @@ class ComplexAutomaton:
         self.screen = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
         pygame.display.set_caption('Complex Automaton Base')
 
-        # pygame.gfxdraw.aacircle(self.screen, 50, 50, 10 + 10, (0,255,0))
-        # pygame.gfxdraw.filled_circle(self.screen, 50, 50, 10, (0,255,0))
-        # pygame.gfxdraw.aacircle(self.screen, 50, 50, 10 - 2, (0,0,0))
-        # pygame.gfxdraw.filled_circle(self.screen, 50, 50, 10 - 2, (0,0,0))
-
         if 'proto_visualizer' in kwargs:
             self.visualizer = kwargs['proto_visualizer'].clone(self.gc, self.screen, self)
         else:
