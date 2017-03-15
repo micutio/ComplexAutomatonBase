@@ -52,6 +52,13 @@ class ComplexAutomaton:
         else:
             self.visualizer = Visualization(self.gc, self.screen, self)
 
+        if 'proto_agent' in kwargs:
+            self.abm = ABM(self.gc, self.visualizer, proto_agent=kwargs['proto_agent'])
+            self.proto_agent = kwargs['proto_agent']
+        else:
+            self.abm = ABM(self.gc, self.visualizer)
+            self.proto_agent = None
+
         if 'proto_cell' in kwargs:
             if self.gc.USE_HEX_CA:
                 self.ca = CAHex(self.gc, self.visualizer, proto_cell=kwargs['proto_cell'])
@@ -64,13 +71,6 @@ class ComplexAutomaton:
             else:
                 self.ca = CARect(self.gc, self.visualizer)
             self.proto_cell = None
-
-        if 'proto_agent' in kwargs:
-            self.abm = ABM(self.gc, self.visualizer, proto_agent=kwargs['proto_agent'])
-            self.proto_agent = kwargs['proto_agent']
-        else:
-            self.abm = ABM(self.gc, self.visualizer)
-            self.proto_agent = None
 
         if 'proto_handler' in kwargs:
             self.handler = kwargs['proto_handler'].clone(self)
@@ -89,8 +89,8 @@ class ComplexAutomaton:
               "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
-        self.ca.__init__(self.gc, self.visualizer, self.proto_cell)
         self.abm.__init__(self.gc, self.visualizer, self.proto_agent)
+        self.ca.__init__(self.gc, self.visualizer, self.proto_cell)
         self.gc.TIME_STEP = 0
 
     def step_simulation(self):
@@ -99,8 +99,8 @@ class ComplexAutomaton:
         self.gc.TIME_STEP += 1
 
     def render_simulation(self):
-        self.ca.draw_cells()
         self.abm.draw_agents()
+        self.ca.draw_cells()
         pygame.display.flip()
 
     def run_main_loop(self):

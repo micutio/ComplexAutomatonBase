@@ -27,5 +27,5 @@ class CabAgent(metaclass=ABCMeta):
         self.dead = False
 
     @abstractmethod
-    def perceive_and_act(self, ca, abm):
+    def perceive_and_act(self, abm, ca):
         raise NotImplementedError("Method needs to be implemented")

@@ -76,6 +76,7 @@ class InputHandler:
     def def_keyboard_action(self, active_key):
         """
         Method to process all the keyboard inputs.
+        This is not supposed to be overwritten.
         """
         if active_key == pygame.K_SPACE:
             self.sys.gc.RUN_SIMULATION = not self.sys.gc.RUN_SIMULATION
