@@ -100,8 +100,8 @@ class ComplexAutomaton:
         self.gc.TIME_STEP += 1
 
     def render_simulation(self):
-        self.abm.draw_agents()
         self.ca.draw_cells()
+        self.abm.draw_agents()
         pygame.display.flip()
 
     def run_main_loop(self):

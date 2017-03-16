@@ -2,7 +2,7 @@
 This module contains a simple visualization class, which the actual simulation visualizer should inherit from.
 """
 
-# External library imports.
+
 import pygame
 import pygame.gfxdraw
 
@@ -34,7 +34,7 @@ class Visualization:
         """
         Simple exemplary visualization. Draw agent as a black circle
         """
-        print('cab_visualization.draw_agent(self, agent) has not been overridden. Agents cannot be displayed.')
+        print('cab_visualization.draw_agent(self, agent) has not been overriden. Agents cannot be displayed.')
 
     def draw_cell(self, cell):
         """
