@@ -36,7 +36,7 @@ class CARect:
             self.proto_cell = proto_cell
             for j in range(0, self.height):
                 for i in range(0, self.width):
-                    self.ca_grid[i, j] = proto_cell.clone(i, j, gc)
+                    self.ca_grid[i, j] = proto_cell.clone(i, j)
 
         if self.use_moore_neighborhood:
             self.init_moore()

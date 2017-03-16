@@ -3,18 +3,19 @@ ComplexAutomaton module of the Complex Automaton Base.
 Contains the automaton itself.
 """
 
+# External library imports.
 import pygame
 import math
+from pygame.locals import *
 
+# Internal Simulation System component imports.
+from cab.cab_global_constants import GlobalConstants
 from cab.abm.cab_abm import ABM
 from cab.ca.cab_ca import CARect
 from cab.ca.cab_ca_hex import CAHex
 from cab.util.cab_input_handling import InputHandler
 from cab.util.cab_visualization import Visualization
 
-from pygame.locals import *
-
-from cab_global_constants import GlobalConstants
 
 __author__ = 'Michael Wagner'
 
@@ -48,7 +49,7 @@ class ComplexAutomaton:
         pygame.display.set_caption('Complex Automaton Base')
 
         if 'proto_visualizer' in kwargs:
-            self.visualizer = kwargs['proto_visualizer'].clone(self.gc, self.screen, self)
+            self.visualizer = kwargs['proto_visualizer'].clone(self.screen, self)
         else:
             self.visualizer = Visualization(self.gc, self.screen, self)
 

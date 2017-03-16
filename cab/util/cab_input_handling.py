@@ -2,9 +2,10 @@
 This module contains a generic InputHandler which handles all keyboard and mouse input to the simulation.
 """
 
-
+# External library imports.
 import pygame
 import sys
+import math
 
 
 __author__ = 'Michael Wagner'
@@ -35,17 +36,17 @@ class InputHandler:
                 sys.exit()
             # Mouse motion
             elif event.type == pygame.MOUSEMOTION:
-                self.mouse_motion()
+                self.default_mouse_motion()
             # Mouse action
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.custom_mouse_action(event.button)
             # Keyboard key is pressed
             elif event.type == pygame.KEYUP:
                 # space bar is pressed
-                self.def_keyboard_action(event.key)
+                self.default_keyboard_action(event.key)
                 self.custom_keyboard_action(event.key)
 
-    def mouse_motion(self):
+    def default_mouse_motion(self):
         """
         Method to track mouse motion.
         Overwrite custom_mouse_motion to add functionality here.
@@ -73,7 +74,7 @@ class InputHandler:
         elif button == 3:
             pass
 
-    def def_keyboard_action(self, active_key):
+    def default_keyboard_action(self, active_key):
         """
         Method to process all the keyboard inputs.
         This is not supposed to be overwritten.
@@ -102,3 +103,47 @@ class InputHandler:
         Overwrite this method to add more inputs.
         """
         pass
+
+    # Additional utility methods for hexagonal cellular automata.
+
+    def get_mouse_hex_coords(self):
+        """
+        Retrieve the current mouse cursor coordinates relative to the hexagonal grid.
+        This method is only needed for hexagonal cellular automata.
+        :return: Hexagonal q,r coordinates of the mouse cursor.
+        """
+        _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.sys.gc.CELL_SIZE
+        _r = self.my * 2 / 3  # / self.sys.gc.CELL_SIZE
+        cell_q, cell_r = InputHandler.hex_round(_q, _r)
+        return cell_q, cell_r
+
+    @staticmethod
+    def hex_round(q, r):
+        return InputHandler.cube_to_hex(*InputHandler.cube_round(*InputHandler.hex_to_cube(q, r)))
+
+    @staticmethod
+    def cube_round(x, y, z):
+        rx = round(x)
+        ry = round(y)
+        rz = round(z)
+        dx = abs(rx - x)
+        dy = abs(ry - y)
+        dz = abs(rz - z)
+
+        if dx > dy and dx > dz:
+            rx = -ry - rz
+        elif dy > dz:
+            ry = -rx - rz
+        else:
+            rz = -rx - ry
+
+        return rx, ry, rz
+
+    @staticmethod
+    def cube_to_hex(x, y, z):
+        return x, y
+
+    @staticmethod
+    def hex_to_cube(q, r):
+        z = -q - r
+        return q, r, z

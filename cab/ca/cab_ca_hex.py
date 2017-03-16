@@ -51,7 +51,7 @@ class CAHex:
                 for i in range(0, self.width):
                     # self.ca_grid[i, j] = proto_cell.clone(i, j, gc.CELL_SIZE)
                     q = i - math.floor(j / 2)
-                    self.ca_grid[q, j] = proto_cell.clone(q, j, gc)
+                    self.ca_grid[q, j] = proto_cell.clone(q, j)
                     # print('x={0}, y={1}'.format(q, j))
                     if self.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
