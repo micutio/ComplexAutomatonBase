@@ -106,6 +106,9 @@ class InputHandler:
 
     # Additional utility methods for hexagonal cellular automata.
 
+    def get_mouse_rect_coords(self):
+        return math.floor(self.mx), math.floor(self.my)
+
     def get_mouse_hex_coords(self):
         """
         Retrieve the current mouse cursor coordinates relative to the hexagonal grid.

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "-> unpacking distribution"
 tar -xf dist/ComplexAutomatonBase-0.9.tar.gz --directory inst/
 cd inst/ComplexAutomatonBase-0.9
