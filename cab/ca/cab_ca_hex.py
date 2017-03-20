@@ -95,6 +95,7 @@ class CAHex:
         for cell in self.ca_grid.values():
             cell.update()
 
+    # TODO: Make use of distance parameter!
     def get_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
         """
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
@@ -104,22 +105,35 @@ class CAHex:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
-        x = agent_x
-        y = agent_y
         neighborhood = {}
-        for i in range(0 - dist, 1 + dist):
-            for j in range(0 - dist, 1 + dist):
-                grid_x = x + i
-                grid_y = y + j
-                if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-                    neigh_cell = self.ca_grid[grid_x, grid_y]
-                    if (grid_x, grid_y) not in other_agents:
-                        neigh_agents = False
-                    else:
-                        neigh_agents = other_agents[grid_x, grid_y]
-                    neighborhood[grid_x, grid_y] = (neigh_cell, neigh_agents)
+
+        cx, cy = agent_x, agent_y
+        for d in self.gc.HEX_DIRECTIONS:
+            x = cx + d[0]
+            y = cy + d[1]
+            if(x, y) in self.ca_grid:
+                neigh_cell = self.ca_grid[x, y]
+                if (x, y) not in other_agents:
+                    neigh_agents = False
+                else:
+                    neigh_agents = other_agents[x, y]
+                neighborhood[x, y] = (neigh_cell, neigh_agents)
         return neighborhood
 
+        # for i in range(0 - dist, 1 + dist):
+        #     for j in range(0 - dist, 1 + dist):
+        #         grid_x = x + i
+        #         grid_y = y + j
+        #         if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
+        #             neigh_cell = self.ca_grid[grid_x, grid_y]
+        #             if (grid_x, grid_y) not in other_agents:
+        #                 neigh_agents = False
+        #             else:
+        #                 neigh_agents = other_agents[grid_x, grid_y]
+        #             neighborhood[grid_x, grid_y] = (neigh_cell, neigh_agents)
+        # return neighborhood
+
+    # TODO: Make use of distance parameter!
     def get_empty_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
         """
         Creates a dictionary {'position': cell} where position is an (x,y) tuple
@@ -129,20 +143,31 @@ class CAHex:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
-        x = agent_x
-        y = agent_y
         neighborhood = {}
-        for i in range(0 - dist, 1 + dist):
-            for j in range(0 - dist, 1 + dist):
-                grid_x = x + i
-                grid_y = y + j
-                if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-                    neigh_cell = self.ca_grid[grid_x, grid_y]
-                    if (grid_x, grid_y) not in other_agents:
-                        neighborhood[grid_x, grid_y] = neigh_cell
-                    else:
-                        continue
+
+        cx, cy = agent_x, agent_y
+        for d in self.gc.HEX_DIRECTIONS:
+            x = cx + d[0]
+            y = cy + d[1]
+            if (x, y) in self.ca_grid:
+                neigh_cell = self.ca_grid[x, y]
+                if (x, y) not in other_agents:
+                    neighborhood[x, y] = neigh_cell
+                else:
+                    continue
         return neighborhood
+
+        # for i in range(0 - dist, 1 + dist):
+        #     for j in range(0 - dist, 1 + dist):
+        #         grid_x = x + i
+        #         grid_y = y + j
+        #         if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
+        #             neigh_cell = self.ca_grid[grid_x, grid_y]
+        #             if (grid_x, grid_y) not in other_agents:
+        #                 neighborhood[grid_x, grid_y] = neigh_cell
+        #             else:
+        #                 continue
+        # return neighborhood
 
     def get_random_valid_position(self):
         return random.choice(list(self.ca_grid.keys()))
