@@ -21,9 +21,8 @@ class CAHex:
 
     def __init__(self, gc, visualizer, proto_cell=None):
         """
-        Initializes and returns the cellular automaton.
-        The CA is a dictionary and not a list of lists
-        :return: The initialized CA.
+        Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
+        where the values are the cells with their q,r-coordinates as keys.
         """
         self.ca_grid = {}
         self.gc = gc
@@ -51,7 +50,7 @@ class CAHex:
                 for i in range(0, self.width):
                     # self.ca_grid[i, j] = proto_cell.clone(i, j, gc.CELL_SIZE)
                     q = i - math.floor(j / 2)
-                    self.ca_grid[q, j] = proto_cell.clone(q, j, gc)
+                    self.ca_grid[q, j] = proto_cell.clone(q, j)
                     # print('x={0}, y={1}'.format(q, j))
                     if self.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
@@ -62,16 +61,33 @@ class CAHex:
     # Common Interface for all CA classes
 
     def set_cell_neighborhood(self, cell):
+        """
+        Assign all neighboring cells of this cell to its neighbor list.
+        :param cell: Cell which neighbor list to update.
+        """
         cx, cy, cz = cell.get_cube()
         for d in self.gc.HEX_DIRECTIONS:
             x = cx + d[0]
             y = cy + d[1]
             if (x, y) in self.ca_grid:
                 cell.neighbors.append(self.ca_grid[x, y])
+            elif not self.gc.USE_CA_BORDERS:
+                # If we don't have borders, overlap to the other side (left, right only) of the map.
+                # Make sure we don't go too high or too low, because we only want to wrap around the "equator".
+                if 0 <= y < self.height:
+                    new_x = 0
+                    min_x = 0 - math.floor(y / 2)
+                    max_x = (self.width - 1) - math.floor(y / 2)
+                    if x < min_x:
+                        new_x = max_x
+                    elif x > max_x:
+                        new_x = min_x
+                    cell.neighbors.append(self.ca_grid[new_x, y])
+                    # print("neighbor {0},{1} becomes {2},{3}".format(x, y, new_x, y))
 
     def draw_cells(self):
         """
-        Simply iterating over all cells and calling their draw() method.
+        Iterate over all cells and call their draw() method.
         """
         draw = self.visualizer.draw_cell
         for cell in self.ca_grid.values():
@@ -79,21 +95,46 @@ class CAHex:
 
     def cycle_automaton(self):
         """
-        This method updates the cellular automaton
+        Update the cellular automaton.
         """
         self.update_cells_from_neighborhood()
         self.update_cells_state()
 
     def update_cells_from_neighborhood(self):
+        """
+        Call the neighborhood-update method of all cells in the cellular automaton.
+        """
         for cell in self.ca_grid.values():
             cell.sense_neighborhood()
 
     def update_cells_state(self):
         """
-        After executing update_neighs this is the actual update of the cell itself
+        Calls the the state-update method of all cells in the cellular automaton.
         """
         for cell in self.ca_grid.values():
             cell.update()
+
+    def get_cell_neighborhood(self, cell_x, cell_y, dist):
+        """
+        Creates a dictionary {'position': cell} where position is an (x,y) tuple
+        for the given cell position to get an overview over the surrounding up to a given distance.
+        """
+        if dist is None:
+            dist = 1
+        # x = int(agent_x / self.cell_size)
+        # y = int(agent_y / self.cell_size)
+        neighborhood = {}
+
+        # This is the new hexagonal neighborhood detection with variable range of vision.
+        for dx in range(-dist, dist+1):
+            for dy in range(max(-dist, -dx-dist), min(dist, -dx+dist) + 1):
+                # dz = -dx-dy
+                x = cell_x + dx
+                y = cell_y + dy
+                if (x, y) in self.ca_grid:
+                    neigh_cell = self.ca_grid[x, y]
+                    neighborhood[x, y] = neigh_cell
+        return neighborhood
 
     # TODO: Make use of distance parameter!
     def get_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
@@ -107,19 +148,36 @@ class CAHex:
         # y = int(agent_y / self.cell_size)
         neighborhood = {}
 
-        cx, cy = agent_x, agent_y
-        for d in self.gc.HEX_DIRECTIONS:
-            x = cx + d[0]
-            y = cy + d[1]
-            if(x, y) in self.ca_grid:
-                neigh_cell = self.ca_grid[x, y]
-                if (x, y) not in other_agents:
-                    neigh_agents = False
-                else:
-                    neigh_agents = other_agents[x, y]
-                neighborhood[x, y] = (neigh_cell, neigh_agents)
+    # This is the new hexagonal neighborhood detection with variable range of vision.
+        for dx in range(-dist, dist+1):
+            for dy in range(max(-dist, -dx-dist), min(dist, -dx+dist) + 1):
+                # dz = -dx-dy
+                x = agent_x + dx
+                y = agent_y + dy
+                if (x, y) in self.ca_grid:
+                    neigh_cell = self.ca_grid[x, y]
+                    if (x, y) not in other_agents:
+                        neigh_agents = False
+                    else:
+                        neigh_agents = other_agents[x, y]
+                    neighborhood[x, y] = (neigh_cell, neigh_agents)
         return neighborhood
 
+    # This is the simple hexagonal neighborhood detection, without constant vision range of one
+        # cx, cy = agent_x, agent_y
+        # for d in self.gc.HEX_DIRECTIONS:
+        #     x = cx + d[0]
+        #     y = cy + d[1]
+        #     if(x, y) in self.ca_grid:
+        #         neigh_cell = self.ca_grid[x, y]
+        #         if (x, y) not in other_agents:
+        #             neigh_agents = False
+        #         else:
+        #             neigh_agents = other_agents[x, y]
+        #         neighborhood[x, y] = (neigh_cell, neigh_agents)
+        # return neighborhood
+
+    # This is the old rectangular neighborhood detection
         # for i in range(0 - dist, 1 + dist):
         #     for j in range(0 - dist, 1 + dist):
         #         grid_x = x + i
@@ -145,18 +203,34 @@ class CAHex:
         # y = int(agent_y / self.cell_size)
         neighborhood = {}
 
-        cx, cy = agent_x, agent_y
-        for d in self.gc.HEX_DIRECTIONS:
-            x = cx + d[0]
-            y = cy + d[1]
-            if (x, y) in self.ca_grid:
-                neigh_cell = self.ca_grid[x, y]
-                if (x, y) not in other_agents:
-                    neighborhood[x, y] = neigh_cell
-                else:
-                    continue
+    # This is the new hexagonal neighborhood detection with variable range of vision.
+        for dx in range(-dist, dist+1):
+            for dy in range(max(-dist, -dx-dist), min(dist, -dx+dist) + 1):
+                # dz = -dx-dy
+                x = agent_x + dx
+                y = agent_y + dy
+                if (x, y) in self.ca_grid:
+                    neigh_cell = self.ca_grid[x, y]
+                    if (x, y) not in other_agents:
+                        neighborhood[x, y] = neigh_cell
+                    else:
+                        continue
         return neighborhood
 
+    # This is the simple hexagonal neighborhood detection, without constant vision range of one
+        # cx, cy = agent_x, agent_y
+        # for d in self.gc.HEX_DIRECTIONS:
+        #     x = cx + d[0]
+        #     y = cy + d[1]
+        #     if (x, y) in self.ca_grid:
+        #         neigh_cell = self.ca_grid[x, y]
+        #         if (x, y) not in other_agents:
+        #             neighborhood[x, y] = neigh_cell
+        #         else:
+        #             continue
+        # return neighborhood
+
+    # This is the old rectangular neighborhood detection
         # for i in range(0 - dist, 1 + dist):
         #     for j in range(0 - dist, 1 + dist):
         #         grid_x = x + i
@@ -170,14 +244,31 @@ class CAHex:
         # return neighborhood
 
     def get_random_valid_position(self):
+        """
+        Returns coordinates of a random cell position that is within the boundaries of the grid.
+        :return: Coordinates in hex form.
+        """
         return random.choice(list(self.ca_grid.keys()))
 
     @staticmethod
     def hex_round(q, r):
+        """
+        Round a hex coordinate to the nearest hex coordinate.
+        :param q: Hex coordinate q.
+        :param r: Hex coordinate r.
+        :return: Rounded hex coordinate triple (x, y, z)
+        """
         return CAHex.cube_to_hex(*CAHex.cube_round(*CAHex.hex_to_cube(q, r)))
 
     @staticmethod
     def cube_round(x, y, z):
+        """
+        Round a cube coordinate to the nearest hex coordinate.
+        :param x: Cube coordinate x.
+        :param y: Cube coordinate y.
+        :param z: Cube coordinate z.
+        :return: Rounded cube coordinate triple (x, y, z)
+        """
         rx = round(x)
         ry = round(y)
         rz = round(z)
@@ -196,42 +287,84 @@ class CAHex:
 
     @staticmethod
     def cube_to_hex(x, y, z):
+        """
+        Convert cube coordinate triple to hex coordinate tuple.
+        :param x: Cube coordinate x.
+        :param y: Cube coordinate y.
+        :param z: Cube coordinate z.
+        :return: Hex coordinate tuple (q, r)
+        """
         return x, y
 
     @staticmethod
     def hex_to_cube(q, r):
+        """
+        Convert hex coordinate tuple into hex coordinate triple.
+        :param q: Hex coordinate q.
+        :param r: Hex coordinate r.
+        :return: Cube coordinate triple (x, y, z)
+        """
         z = -q - r
         return q, r, z
 
     @staticmethod
     def hex_distance(q1, r1, q2, r2):
+        """
+        Return hex distance between two cells. Equivalent to CAHex.cube_distance(cell_a, cell_b).
+        :param q1: Q coordinate of first cell.
+        :param r1: R coordinate of first cell.
+        :param q2: Q coordinate of second cell.
+        :param r2: R coordinate of second cell.
+        :return: Distance between first and second cell.
+        """
         return (abs(q1 - q2) +
                 abs(q1 + r1 - q2 - r2) +
                 abs(r1 - r2)) / 2
 
     @staticmethod
+    def get_cell_in_direction(a, b):
+        """
+        Returns the first cell to go to when moving from cell a to cell b.
+        :param a: Starting cell.
+        :param b: Target cell.
+        :return: Neighboring cell of cell a that leads towards cell b.
+        """
+        n = CAHex.cube_distance(a, b)
+        _x, _y, _z = CAHex.cube_interpolate(a, b, 1.0/n * 1)
+        _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
+        return _q, _r
+
+    @staticmethod
     def cube_distance(cell_a, cell_b):
-        return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y),
-                   abs(cell_a.z - cell_b.z))
-
-    @staticmethod
-    def get_direction_from_to(q1, r1, q2, r2):
-        pass
-
-    @staticmethod
-    def float_interpolate(a, b, t):
-        return a + (b - a) * t
+        """
+        Returns the cube distance between cell a and cell b. Equivalent to CAHex.hex_distance(q1, r1, q1, r1).
+        :param cell_a: Starting cell.
+        :param cell_b: Target cell.
+        :return: Cube distance between both cells as integer.
+        """
+        return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y), abs(cell_a.z - cell_b.z))
 
     @staticmethod
     def cube_interpolate(a, b, t):
+        """
+        Helper method for direction calculation.
+        :param a: Starting cell.
+        :param b: Target cell.
+        :param t: Current step on the way between a and b.
+        :return: Current cell on the way between a and b.
+        """
         x = CAHex.float_interpolate(a.x, b.x, t)
         y = CAHex.float_interpolate(a.y, b.y, t)
         z = CAHex.float_interpolate(a.z, b.z, t)
         return x, y, z
 
     @staticmethod
-    def get_cell_in_direction(a, b):
-        # N = CAHex.cube_distance(a, b)
-        _x, _y, _z = CAHex.cube_interpolate(a, b, 1)
-        _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
-        return _q, _r
+    def float_interpolate(a, b, t):
+        """
+        Interpolate a coordinate between two cells and give step.
+        :param a: Starting cell
+        :param b: Target cell
+        :param t: Current step on the way between a and b.
+        :return: Interpolated coordinate between cell a and cell b.
+        """
+        return a + (b - a) * t
