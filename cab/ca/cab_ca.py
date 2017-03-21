@@ -11,27 +11,28 @@ __author__ = 'Michael Wagner'
 
 
 class CARect:
-    def __init__(self, gc, visualizer, proto_cell=None):
+    def __init__(self, cab_sys, visualizer, proto_cell=None):
         """
         Initializes and returns the cellular automaton.
         The CA is a dictionary and not a list of lists
         :return: The initialized CA.
         """
         self.ca_grid = {}
-        self.grid_height = gc.GRID_HEIGHT
-        self.grid_width = gc.GRID_WIDTH
-        self.height = int(self.grid_height / gc.CELL_SIZE)
-        self.width = int(self.grid_width / gc.CELL_SIZE)
-        self.cell_size = gc.CELL_SIZE
+        self.sys = cab_sys
+        self.grid_height = self.sys.gc.GRID_HEIGHT
+        self.grid_width = self.sys.gc.GRID_WIDTH
+        self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
+        self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
+        self.cell_size = self.sys.gc.CELL_SIZE
         self.visualizer = visualizer
-        self.use_moore_neighborhood = gc.USE_MOORE_NEIGHBORHOOD
-        self.use_borders = gc.USE_CA_BORDERS
+        self.use_moore_neighborhood = self.sys.gc.USE_MOORE_NEIGHBORHOOD
+        self.use_borders = self.sys.gc.USE_CA_BORDERS
         self.proto_cell = None
 
         if proto_cell is None:
             for j in range(0, self.height):
                 for i in range(0, self.width):
-                    self.ca_grid[i, j] = CellRect(i, j, gc)
+                    self.ca_grid[i, j] = CellRect(i, j, self.sys.gc)
         else:
             self.proto_cell = proto_cell
             for j in range(0, self.height):
@@ -73,7 +74,7 @@ class CARect:
         for cell in self.ca_grid.values():
             cell.update()
 
-    def get_agent_neighborhood(self, a_pos, agent_x, agent_y):
+    def get_agent_neighborhood(self, agent_x, agent_y, dist):
         """
         Creates a dictionary {'position': (cell, [agents on that cell])}
         for the calling agent to get an overview over its immediate surrounding.
@@ -81,16 +82,17 @@ class CARect:
         x = int(agent_x / self.cell_size)
         y = int(agent_y / self.cell_size)
         neighborhood = {}
-        for i in range(-1, 2):
-            for j in range(-1, 2):
+        other_agents = self.sys.abm.agent_locations
+        for i in range(-1 - dist, 2 + dist):
+            for j in range(-1 - dist, 2 + dist):
                 grid_x = x + i
                 grid_y = y + j
                 if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
                     a = self.ca_grid[grid_x, grid_y]
-                    if (grid_x, grid_y) not in a_pos:
+                    if (grid_x, grid_y) not in other_agents:
                         b = False
                     else:
-                        b = a_pos[grid_x, grid_y]
+                        b = other_agents[grid_x, grid_y]
                     neighborhood[grid_x, grid_y] = (a, b)
         return neighborhood
 

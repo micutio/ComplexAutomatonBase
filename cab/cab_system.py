@@ -62,15 +62,15 @@ class ComplexAutomaton:
 
         if 'proto_cell' in kwargs:
             if self.gc.USE_HEX_CA:
-                self.ca = CAHex(self.gc, self.visualizer, proto_cell=kwargs['proto_cell'])
+                self.ca = CAHex(self, self.visualizer, proto_cell=kwargs['proto_cell'])
             else:
-                self.ca = CARect(self.gc, self.visualizer, proto_cell=kwargs['proto_cell'])
+                self.ca = CARect(self, self.visualizer, proto_cell=kwargs['proto_cell'])
             self.proto_cell = kwargs['proto_cell']
         else:
             if self.gc.USE_HEX_CA:
-                self.ca = CAHex(self.gc, self.visualizer)
+                self.ca = CAHex(self, self.visualizer)
             else:
-                self.ca = CARect(self.gc, self.visualizer)
+                self.ca = CARect(self, self.visualizer)
             self.proto_cell = None
 
         if 'proto_handler' in kwargs:
@@ -91,7 +91,7 @@ class ComplexAutomaton:
 
     def reset_simulation(self):
         self.abm.__init__(self.gc, self.visualizer, self.proto_agent)
-        self.ca.__init__(self.gc, self.visualizer, self.proto_cell)
+        self.ca.__init__(self, self.visualizer, self.proto_cell)
         self.gc.TIME_STEP = 0
 
     def step_simulation(self):

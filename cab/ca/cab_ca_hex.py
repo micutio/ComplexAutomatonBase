@@ -19,20 +19,20 @@ class CAHex:
     - axial coordinates for storage
     """
 
-    def __init__(self, gc, visualizer, proto_cell=None):
+    def __init__(self, cab_sys, visualizer, proto_cell=None):
         """
         Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
         where the values are the cells with their q,r-coordinates as keys.
         """
         self.ca_grid = {}
-        self.gc = gc
-        self.grid_height = gc.GRID_HEIGHT
-        self.grid_width = gc.GRID_WIDTH
-        self.height = int(self.grid_height / gc.CELL_SIZE)
-        self.width = int(self.grid_width / gc.CELL_SIZE)
-        self.cell_size = gc.CELL_SIZE
+        self.sys = cab_sys
+        self.grid_height = self.sys.gc.GRID_HEIGHT
+        self.grid_width = self.sys.gc.GRID_WIDTH
+        self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
+        self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
+        self.cell_size = self.sys.gc.CELL_SIZE
         self.visualizer = visualizer
-        self.use_borders = gc.USE_CA_BORDERS
+        self.use_borders = self.sys.gc.USE_CA_BORDERS
         self.proto_cell = None
 
         if proto_cell is None:
@@ -42,7 +42,7 @@ class CAHex:
                     q = i - math.floor(j / 2)
                     self.ca_grid[q, j] = CellHex(q, j, gc)
                     # print('x={0}, y={1}'.format(q, j))
-                    if self.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
+                    if self.sys.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
         else:
             self.proto_cell = proto_cell
@@ -52,7 +52,7 @@ class CAHex:
                     q = i - math.floor(j / 2)
                     self.ca_grid[q, j] = proto_cell.clone(q, j)
                     # print('x={0}, y={1}'.format(q, j))
-                    if self.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
+                    if self.sys.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
 
         for cell in list(self.ca_grid.values()):
@@ -66,12 +66,12 @@ class CAHex:
         :param cell: Cell which neighbor list to update.
         """
         cx, cy, cz = cell.get_cube()
-        for d in self.gc.HEX_DIRECTIONS:
+        for d in self.sys.gc.HEX_DIRECTIONS:
             x = cx + d[0]
             y = cy + d[1]
             if (x, y) in self.ca_grid:
                 cell.neighbors.append(self.ca_grid[x, y])
-            elif not self.gc.USE_CA_BORDERS:
+            elif not self.sys.gc.USE_CA_BORDERS:
                 # If we don't have borders, overlap to the other side (left, right only) of the map.
                 # Make sure we don't go too high or too low, because we only want to wrap around the "equator".
                 if 0 <= y < self.height:
@@ -134,10 +134,19 @@ class CAHex:
                 if (x, y) in self.ca_grid:
                     neigh_cell = self.ca_grid[x, y]
                     neighborhood[x, y] = neigh_cell
+                elif not self.sys.gc.USE_CA_BORDERS and 0 <= y < self.height:
+                    new_x = 0
+                    min_x = 0 - math.floor(y / 2)
+                    max_x = (self.width - 1) - math.floor(y / 2)
+                    if x < min_x:
+                        new_x = (max_x + 1) - (min_x - x)
+                    elif x > max_x:
+                        new_x = (min_x - 1) + (x - max_x)
+                    neigh_cell = self.ca_grid[new_x, y]
+                    neighborhood[new_x, y] = neigh_cell
         return neighborhood
 
-    # TODO: Make use of distance parameter!
-    def get_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
+    def get_agent_neighborhood(self, agent_x, agent_y, dist):
         """
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
@@ -146,53 +155,21 @@ class CAHex:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
-        neighborhood = {}
+        neighborhood = self.get_cell_neighborhood(agent_x, agent_y, dist)
+        new_neighborhood = {}
+        other_agents = self.sys.abm.agent_locations
 
-    # This is the new hexagonal neighborhood detection with variable range of vision.
-        for dx in range(-dist, dist+1):
-            for dy in range(max(-dist, -dx-dist), min(dist, -dx+dist) + 1):
-                # dz = -dx-dy
-                x = agent_x + dx
-                y = agent_y + dy
-                if (x, y) in self.ca_grid:
-                    neigh_cell = self.ca_grid[x, y]
-                    if (x, y) not in other_agents:
-                        neigh_agents = False
-                    else:
-                        neigh_agents = other_agents[x, y]
-                    neighborhood[x, y] = (neigh_cell, neigh_agents)
-        return neighborhood
+    # This is the slimmed down version that also considers wrapping around ca borders.
+        for key, value in neighborhood.items():
+            if key not in other_agents:
+                agents_on_cell = False
+            else:
+                agents_on_cell = other_agents[key]
+            new_neighborhood[key] = (value, agents_on_cell)
 
-    # This is the simple hexagonal neighborhood detection, without constant vision range of one
-        # cx, cy = agent_x, agent_y
-        # for d in self.gc.HEX_DIRECTIONS:
-        #     x = cx + d[0]
-        #     y = cy + d[1]
-        #     if(x, y) in self.ca_grid:
-        #         neigh_cell = self.ca_grid[x, y]
-        #         if (x, y) not in other_agents:
-        #             neigh_agents = False
-        #         else:
-        #             neigh_agents = other_agents[x, y]
-        #         neighborhood[x, y] = (neigh_cell, neigh_agents)
-        # return neighborhood
+        return new_neighborhood
 
-    # This is the old rectangular neighborhood detection
-        # for i in range(0 - dist, 1 + dist):
-        #     for j in range(0 - dist, 1 + dist):
-        #         grid_x = x + i
-        #         grid_y = y + j
-        #         if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-        #             neigh_cell = self.ca_grid[grid_x, grid_y]
-        #             if (grid_x, grid_y) not in other_agents:
-        #                 neigh_agents = False
-        #             else:
-        #                 neigh_agents = other_agents[grid_x, grid_y]
-        #             neighborhood[grid_x, grid_y] = (neigh_cell, neigh_agents)
-        # return neighborhood
-
-    # TODO: Make use of distance parameter!
-    def get_empty_agent_neighborhood(self, other_agents, agent_x, agent_y, dist):
+    def get_empty_agent_neighborhood(self, agent_x, agent_y, dist):
         """
         Creates a dictionary {'position': cell} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
@@ -201,47 +178,12 @@ class CAHex:
             dist = 1
         # x = int(agent_x / self.cell_size)
         # y = int(agent_y / self.cell_size)
-        neighborhood = {}
+        neighborhood = self.get_cell_neighborhood(agent_x, agent_y, dist)
+        other_agents = self.sys.abm.agent_locations
 
-    # This is the new hexagonal neighborhood detection with variable range of vision.
-        for dx in range(-dist, dist+1):
-            for dy in range(max(-dist, -dx-dist), min(dist, -dx+dist) + 1):
-                # dz = -dx-dy
-                x = agent_x + dx
-                y = agent_y + dy
-                if (x, y) in self.ca_grid:
-                    neigh_cell = self.ca_grid[x, y]
-                    if (x, y) not in other_agents:
-                        neighborhood[x, y] = neigh_cell
-                    else:
-                        continue
+        # This is the slimmed down version that also considers wrapping around ca borders.
+        neighborhood = {key: value for key, value in neighborhood.items() if key not in other_agents}
         return neighborhood
-
-    # This is the simple hexagonal neighborhood detection, without constant vision range of one
-        # cx, cy = agent_x, agent_y
-        # for d in self.gc.HEX_DIRECTIONS:
-        #     x = cx + d[0]
-        #     y = cy + d[1]
-        #     if (x, y) in self.ca_grid:
-        #         neigh_cell = self.ca_grid[x, y]
-        #         if (x, y) not in other_agents:
-        #             neighborhood[x, y] = neigh_cell
-        #         else:
-        #             continue
-        # return neighborhood
-
-    # This is the old rectangular neighborhood detection
-        # for i in range(0 - dist, 1 + dist):
-        #     for j in range(0 - dist, 1 + dist):
-        #         grid_x = x + i
-        #         grid_y = y + j
-        #         if (grid_x, grid_y) in self.ca_grid and not (grid_x == 0 and grid_y == 0):
-        #             neigh_cell = self.ca_grid[grid_x, grid_y]
-        #             if (grid_x, grid_y) not in other_agents:
-        #                 neighborhood[grid_x, grid_y] = neigh_cell
-        #             else:
-        #                 continue
-        # return neighborhood
 
     def get_random_valid_position(self):
         """
