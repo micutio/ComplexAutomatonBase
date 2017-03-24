@@ -40,7 +40,7 @@ class CAHex:
                 for i in range(0, self.width):
                     # self.ca_grid[i, j] = CellHex(i, j, gc.CELL_SIZE, gc)
                     q = i - math.floor(j / 2)
-                    self.ca_grid[q, j] = CellHex(q, j, gc)
+                    self.ca_grid[q, j] = CellHex(q, j, self.sys.gc)
                     # print('x={0}, y={1}'.format(q, j))
                     if self.sys.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
@@ -182,6 +182,8 @@ class CAHex:
         other_agents = self.sys.abm.agent_locations
 
         # This is the slimmed down version that also considers wrapping around ca borders.
+        # print('neighborhood items: {0}'.format(list(neighborhood.items())))
+        # print('other_agents items: {0}'.format(list(other_agents.items())))
         neighborhood = {key: value for key, value in neighborhood.items() if key not in other_agents}
         return neighborhood
 

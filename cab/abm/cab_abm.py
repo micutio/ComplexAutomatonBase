@@ -29,29 +29,29 @@ class ABM:
         """
         # Have all agents perceive and act in a random order
         # While we're at it, look for dead agents to remove
-        changed_agents = []
+        # changed_agents = []
         for a in self.agent_set:
-            a.perceive_and_act(ca, self)
+            a.perceive_and_act(self, ca)
             if a.x != a.prev_x or a.y != a.prev_y:
-                changed_agents.append(a)
-        self.update_agent_positions(changed_agents)
+                self.update_agent_position(a)
         self.schedule_new_agents()
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
         dead_agents = [agent for agent in self.agent_set if agent.dead]
         for agent in dead_agents:
             self.remove_agent(agent)
 
-    def update_agent_positions(self, changed_agents):
-        for agent in changed_agents:
-            if self.gc.ONE_AGENT_PER_CELL:
+    def update_agent_position(self, agent):
+        if self.gc.ONE_AGENT_PER_CELL:
+            self.agent_locations.pop((agent.prev_x, agent.prev_y))
+            self.agent_locations[agent.x, agent.y] = agent
+        else:
+            self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
+            if not self.agent_locations[agent.agent.x, agent.prev_y]:
                 self.agent_locations.pop((agent.prev_x, agent.prev_y))
-                self.agent_locations[agent.x, agent.y] = agent
-            else:
-                self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
-                try:
-                    self.agent_locations[agent.x, agent.y].add(agent)
-                except KeyError:
-                    self.agent_locations[agent.x, agent.y] = {agent}  # set([agent])
+            try:
+                self.agent_locations[agent.x, agent.y].add(agent)
+            except KeyError:
+                self.agent_locations[agent.x, agent.y] = {agent}  # set([agent])
 
     def add_agent(self, agent):
         self.new_agents.append(agent)
