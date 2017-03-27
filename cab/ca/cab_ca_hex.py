@@ -274,8 +274,12 @@ class CAHex:
         :return: Neighboring cell of cell a that leads towards cell b.
         """
         n = CAHex.cube_distance(a, b)
-        _x, _y, _z = CAHex.cube_interpolate(a, b, 1.0/n * 1)
-        _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
+        # Consider the special case where a and b are identical.
+        if n == 0:
+            return b
+        else:
+            _x, _y, _z = CAHex.cube_interpolate(a, b, 1.0/n * 1)
+            _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
         return _q, _r
 
     @staticmethod
