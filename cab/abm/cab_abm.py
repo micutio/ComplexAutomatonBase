@@ -34,11 +34,11 @@ class ABM:
             a.perceive_and_act(self, ca)
             if a.x != a.prev_x or a.y != a.prev_y:
                 self.update_agent_position(a)
-        self.schedule_new_agents()
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
         dead_agents = [agent for agent in self.agent_set if agent.dead]
         for agent in dead_agents:
             self.remove_agent(agent)
+        self.schedule_new_agents()
 
     def update_agent_position(self, agent):
         if self.gc.ONE_AGENT_PER_CELL:
@@ -55,24 +55,35 @@ class ABM:
 
     def add_agent(self, agent):
         self.new_agents.append(agent)
+        pos = (agent.x, agent.y)
+        if agent.x is not None and agent.y is not None:
+            if self.gc.ONE_AGENT_PER_CELL:
+                if pos not in self.agent_locations:
+                    self.agent_locations[pos] = agent
+                    # Can't insert agent if cell is already occupied.
+            else:
+                if pos in self.agent_locations:
+                    self.agent_locations[pos].add(agent)
+                else:
+                    self.agent_locations[pos] = {agent}
 
     def schedule_new_agents(self):
         """
         Adds an agent to be scheduled by the abm.
         """
         for agent in self.new_agents:
-            pos = (agent.x, agent.y)
+            # pos = (agent.x, agent.y)
             self.agent_set.add(agent)
-            if agent.x is not None and agent.y is not None:
-                if self.gc.ONE_AGENT_PER_CELL:
-                    if pos not in self.agent_locations:
-                        self.agent_locations[pos] = agent
-                    # Can't insert agent if cell is already occupied.
-                else:
-                    if pos in self.agent_locations:
-                        self.agent_locations[pos].add(agent)
-                    else:
-                        self.agent_locations[pos] = {agent}
+            # if agent.x is not None and agent.y is not None:
+            #     if self.gc.ONE_AGENT_PER_CELL:
+            #         if pos not in self.agent_locations:
+            #             self.agent_locations[pos] = agent
+            #         # Can't insert agent if cell is already occupied.
+            #     else:
+            #         if pos in self.agent_locations:
+            #             self.agent_locations[pos].add(agent)
+            #         else:
+            #             self.agent_locations[pos] = {agent}
         self.new_agents = list()
 
     def remove_agent(self, agent):
