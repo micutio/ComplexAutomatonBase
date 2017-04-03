@@ -15,7 +15,7 @@ class Visualization:
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc, surface, sys):
+    def __init__(self, gc, surface, cab_core):
         """
         Initializes the visualization and passes the surface on which to draw.
         :param surface: Pygame surface object.
@@ -25,10 +25,10 @@ class Visualization:
         else:
             self.surface = surface
         self.gc = gc
-        self.sys = sys
+        self.core = cab_core
 
-    def clone(self, surface, sys):
-        return Visualization(self.gc, surface, sys)
+    def clone(self, surface, cab_core):
+        return Visualization(self.gc, surface, cab_core)
 
     def draw_agent(self, agent):
         """

@@ -7,6 +7,8 @@ import pygame
 import sys
 import math
 
+# Internal Simulation System Component imports.
+from cab.ca.cab_ca_hex import CAHex
 
 __author__ = 'Michael Wagner'
 
@@ -15,16 +17,16 @@ class InputHandler:
     """
     This class incorporates all methods necessary for controlling the simulation.
     """
-    def __init__(self, cab_system):
+    def __init__(self, cab_core):
         self.mx = 0
         self.my = 0
-        if cab_system is None:
-            self.sys = None
+        if cab_core is None:
+            self.core = None
         else:
-            self.sys = cab_system
+            self.core = cab_core
 
-    def clone(self, cab_sys):
-        return InputHandler(cab_sys)
+    def clone(self, cab_core):
+        return InputHandler(cab_core)
 
     def process_input(self):
         """
@@ -52,8 +54,8 @@ class InputHandler:
         Overwrite custom_mouse_motion to add functionality here.
         """
         self.mx, self.my = pygame.mouse.get_pos()
-        self.mx = (self.mx / self.sys.gc.CELL_SIZE)
-        self.my = (self.my / self.sys.gc.CELL_SIZE)
+        self.mx = (self.mx / self.core.gc.CELL_SIZE)
+        self.my = (self.my / self.core.gc.CELL_SIZE)
         self.custom_mouse_motion()
 
     def custom_mouse_motion(self):
@@ -70,7 +72,7 @@ class InputHandler:
         if button == 1:
             pass
 
-        # Click on right mouse button
+        # Click on right mouse button.
         elif button == 3:
             pass
 
@@ -80,22 +82,27 @@ class InputHandler:
         This is not supposed to be overwritten.
         """
         if active_key == pygame.K_SPACE:
-            self.sys.gc.RUN_SIMULATION = not self.sys.gc.RUN_SIMULATION
-            if self.sys.gc.RUN_SIMULATION:
-                print(" < simulation resumed")
+            self.core.gc.RUN_SIMULATION = not self.core.gc.RUN_SIMULATION
+            if self.core.gc.RUN_SIMULATION:
+                print(' < simulation resumed')
             else:
-                print(" < simulation paused")
+                print(' < simulation paused')
 
-        # Simulation Standard: 'r' resets the simulation
+        # Simulation Standard: 'r' resets the simulation.
         if active_key == pygame.K_r:
-            self.sys.reset_simulation()
-            print(" < simulation reset")
+            self.core.reset_simulation()
+            print(' < simulation reset')
 
-        # Simulation Standard: 's' advances the simulation by one step
+        # Simulation Standard: 's' advances the simulation by one step.
         if active_key == pygame.K_s:
-            self.sys.step_simulation()
-            self.sys.render_simulation()
-            print(" < stepping simulation")
+            self.core.step_simulation()
+            self.core.render_simulation()
+            print(' < stepping simulation')
+
+        # Simulation Standard: 'q' closes the simulation and visualization window.
+        if active_key == pygame.K_q:
+            print(' < shutting down simulation')
+            sys.exit()
 
     def custom_keyboard_action(self, active_key):
         """
@@ -115,38 +122,8 @@ class InputHandler:
         This method is only needed for hexagonal cellular automata.
         :return: Hexagonal q,r coordinates of the mouse cursor.
         """
-        _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.sys.gc.CELL_SIZE
-        _r = self.my * 2 / 3  # / self.sys.gc.CELL_SIZE
-        cell_q, cell_r = InputHandler.hex_round(_q, _r)
+        _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
+        _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
+        cell_q, cell_r = CAHex.hex_round(_q, _r)
         return cell_q, cell_r
 
-    @staticmethod
-    def hex_round(q, r):
-        return InputHandler.cube_to_hex(*InputHandler.cube_round(*InputHandler.hex_to_cube(q, r)))
-
-    @staticmethod
-    def cube_round(x, y, z):
-        rx = round(x)
-        ry = round(y)
-        rz = round(z)
-        dx = abs(rx - x)
-        dy = abs(ry - y)
-        dz = abs(rz - z)
-
-        if dx > dy and dx > dz:
-            rx = -ry - rz
-        elif dy > dz:
-            ry = -rx - rz
-        else:
-            rz = -rx - ry
-
-        return rx, ry, rz
-
-    @staticmethod
-    def cube_to_hex(x, y, z):
-        return x, y
-
-    @staticmethod
-    def hex_to_cube(q, r):
-        z = -q - r
-        return q, r, z

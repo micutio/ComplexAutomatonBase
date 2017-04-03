@@ -46,7 +46,7 @@ class ABM:
             self.agent_locations[agent.x, agent.y] = agent
         else:
             self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
-            if not self.agent_locations[agent.agent.x, agent.prev_y]:
+            if not self.agent_locations[agent.prev_x, agent.prev_y]:
                 self.agent_locations.pop((agent.prev_x, agent.prev_y))
             try:
                 self.agent_locations[agent.x, agent.y].add(agent)
