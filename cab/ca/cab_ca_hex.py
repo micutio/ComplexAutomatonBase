@@ -19,7 +19,7 @@ class CAHex:
     - axial coordinates for storage
     """
 
-    def __init__(self, cab_sys, visualizer, proto_cell=None):
+    def __init__(self, cab_sys, proto_cell=None):
         """
         Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
         where the values are the cells with their q,r-coordinates as keys.
@@ -31,7 +31,6 @@ class CAHex:
         self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
         self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
         self.cell_size = self.sys.gc.CELL_SIZE
-        self.visualizer = visualizer
         self.use_borders = self.sys.gc.USE_CA_BORDERS
         self.proto_cell = None
 
@@ -85,13 +84,13 @@ class CAHex:
                     cell.neighbors.append(self.ca_grid[new_x, y])
                     # print("neighbor {0},{1} becomes {2},{3}".format(x, y, new_x, y))
 
-    def draw_cells(self):
-        """
-        Iterate over all cells and call their draw() method.
-        """
-        draw = self.visualizer.draw_cell
-        for cell in self.ca_grid.values():
-            draw(cell)
+    # def draw_cells(self):
+    #     """
+    #     Iterate over all cells and call their draw() method.
+    #     """
+    #     draw = self.visualizer.draw_cell
+    #     for cell in self.ca_grid.values():
+    #         draw(cell)
 
     def cycle_automaton(self):
         """

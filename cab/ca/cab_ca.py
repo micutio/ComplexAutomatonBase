@@ -11,7 +11,7 @@ __author__ = 'Michael Wagner'
 
 
 class CARect:
-    def __init__(self, cab_sys, visualizer, proto_cell=None):
+    def __init__(self, cab_sys, proto_cell=None):
         """
         Initializes and returns the cellular automaton.
         The CA is a dictionary and not a list of lists
@@ -24,7 +24,6 @@ class CARect:
         self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
         self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
         self.cell_size = self.sys.gc.CELL_SIZE
-        self.visualizer = visualizer
         self.use_moore_neighborhood = self.sys.gc.USE_MOORE_NEIGHBORHOOD
         self.use_borders = self.sys.gc.USE_CA_BORDERS
         self.proto_cell = None
@@ -48,13 +47,13 @@ class CARect:
 
     # Common Interface for all CA classes
 
-    def draw_cells(self):
-        """
-        Simply iterating over all cells and calling their draw() method.
-        """
-        draw = self.visualizer.draw_cell
-        for cell in self.ca_grid.values():
-            draw(cell)
+    # def draw_cells(self):
+    #     """
+    #     Simply iterating over all cells and calling their draw() method.
+    #     """
+    #     draw = self.visualizer.draw_cell
+    #     for cell in self.ca_grid.values():
+    #         draw(cell)
 
     def cycle_automaton(self):
         """

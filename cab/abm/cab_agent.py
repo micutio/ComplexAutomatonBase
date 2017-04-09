@@ -18,12 +18,13 @@ class CabAgent(metaclass=ABCMeta):
 
     def __init__(self, x, y, gc):
         self.a_id = uuid.uuid4().urn
+        self.gc = gc
         self.x = x
         self.y = y
         self.prev_x = x
         self.prev_y = y
         self.size = gc.CELL_SIZE
-        self.gc = gc
+        self.color = gc.DEFAULT_AGENT_COLOR
         self.dead = False
 
     @abstractmethod

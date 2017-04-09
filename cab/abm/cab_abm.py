@@ -8,16 +8,14 @@ __author__ = 'Michael Wagner'
 
 # TODO: include choice between cells inhabitable by only one or multiple agents at once.
 class ABM:
-    def __init__(self, gc, visualizer, proto_agent=None):
+    def __init__(self, gc, proto_agent=None):
         """
         Initializes an abm with the given number of agents and returns it.
-        :param visualizer: Necessary for graphical output of the agents.
         :param gc: Global Constants, Parameters for the ABM.
         :return: An initialized ABM.
         """
         self.agent_set = set()
         self.agent_locations = dict()
-        self.visualizer = visualizer
         self.gc = gc
         self.new_agents = []
         if proto_agent is not None:
@@ -98,10 +96,10 @@ class ABM:
             if len(self.agent_locations[agent.x, agent.y]) == 0:
                 del(self.agent_locations[agent.x, agent.y])
 
-    def draw_agents(self):
-        """
-        Iterates over all agents and hands them over to the visualizer.
-        """
-        draw = self.visualizer.draw_agent
-        for a in self.agent_set:
-            draw(a)
+    # def draw_agents(self):
+    #     """
+    #     Iterates over all agents and hands them over to the visualizer.
+    #     """
+    #     draw = self.visualizer.draw_agent
+    #     for a in self.agent_set:
+    #         draw(a)

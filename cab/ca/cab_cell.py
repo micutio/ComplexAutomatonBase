@@ -21,6 +21,7 @@ class CACell(metaclass=ABCMeta):
         self.neighbors = []
         self.rectangular = True
         self.is_border = False
+        self.color = gc.DEFAULT_CELL_COLOR
 
     def set_neighbors(self, neighbors):
         self.neighbors = neighbors

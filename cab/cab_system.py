@@ -4,17 +4,17 @@ Contains the automaton itself.
 """
 
 # External library imports.
-import pygame
-import math
-from pygame.locals import *
+# import pygame
+# import math
+# from pygame.locals import *
 
 # Internal Simulation System component imports.
-from cab.cab_global_constants import GlobalConstants
-from cab.abm.cab_abm import ABM
-from cab.ca.cab_ca import CARect
-from cab.ca.cab_ca_hex import CAHex
-from cab.util.cab_input_handling import InputHandler
-from cab.util.cab_visualization import Visualization
+from cab_global_constants import GlobalConstants
+from abm.cab_abm import ABM
+from ca.cab_ca import CARect
+from ca.cab_ca_hex import CAHex
+from util.cab_input_handling import InputHandler
+from util.cab_visualization import Visualization
 
 
 __author__ = 'Michael Wagner'
@@ -34,49 +34,32 @@ class ComplexAutomaton:
         """
         self.gc = global_constants
 
-        pygame.init()
-        # pygame.display.init()
-        if self.gc.USE_HEX_CA:
-            offset_x = int((math.sqrt(3) / 2) * (self.gc.CELL_SIZE * 2) * (self.gc.DIM_X - 1))
-            offset_y = int((3 / 4) * (self.gc.CELL_SIZE * 2) * (self.gc.DIM_Y - 1))
-            # print(offset)
-            # self.screen = pygame.display.set_mode((self.gc.GRID_WIDTH, self.gc.GRID_HEIGHT), pygame.RESIZABLE, 32)
-        else:
-            offset_x = self.gc.CELL_SIZE * self.gc.DIM_X
-            offset_y = self.gc.CELL_SIZE * self.gc.DIM_Y
-
-        self.screen = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
-        pygame.display.set_caption('Complex Automaton Base')
-
-        if 'proto_visualizer' in kwargs:
-            self.visualizer = kwargs['proto_visualizer'].clone(self.screen, self)
-        else:
-            self.visualizer = Visualization(self.gc, self.screen, self)
+        self.visualizer = Visualization(self.gc, self)
 
         if 'proto_agent' in kwargs:
-            self.abm = ABM(self.gc, self.visualizer, proto_agent=kwargs['proto_agent'])
+            self.abm = ABM(self.gc, proto_agent=kwargs['proto_agent'])
             self.proto_agent = kwargs['proto_agent']
         else:
-            self.abm = ABM(self.gc, self.visualizer)
+            self.abm = ABM(self.gc)
             self.proto_agent = None
 
         if 'proto_cell' in kwargs:
             if self.gc.USE_HEX_CA:
-                self.ca = CAHex(self, self.visualizer, proto_cell=kwargs['proto_cell'])
+                self.ca = CAHex(self, proto_cell=kwargs['proto_cell'])
             else:
-                self.ca = CARect(self, self.visualizer, proto_cell=kwargs['proto_cell'])
+                self.ca = CARect(self, proto_cell=kwargs['proto_cell'])
             self.proto_cell = kwargs['proto_cell']
         else:
             if self.gc.USE_HEX_CA:
-                self.ca = CAHex(self, self.visualizer)
+                self.ca = CAHex(self)
             else:
-                self.ca = CARect(self, self.visualizer)
+                self.ca = CARect(self)
             self.proto_cell = None
 
         if 'proto_handler' in kwargs:
             self.handler = kwargs['proto_handler'].clone(self)
         else:
-            self.handler = InputHandler(cab_system=self)
+            self.handler = InputHandler(cab_core=self)
 
         self.display_info()
         return
@@ -100,9 +83,7 @@ class ComplexAutomaton:
         self.gc.TIME_STEP += 1
 
     def render_simulation(self):
-        self.ca.draw_cells()
-        self.abm.draw_agents()
-        pygame.display.flip()
+        self.visualizer.render_simulation()
 
     def run_main_loop(self):
         """
