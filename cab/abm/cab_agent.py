@@ -30,3 +30,31 @@ class CabAgent(metaclass=ABCMeta):
     @abstractmethod
     def perceive_and_act(self, abm, ca):
         raise NotImplementedError("Method needs to be implemented")
+
+    def on_lmb_click(self):
+        """
+        Executed when the mouse is pointed at the agent and left clicked.
+        To be implemented by the gui class.
+        :return: 
+        """
+        pass
+
+    def on_rmb_click(self):
+        """
+        Executed when the mouse is pointed at the agent and right clicked.
+        To be implemented by the gui class.
+        :return: 
+        """
+        pass
+
+    def on_mouse_scroll_up(self):
+        """
+        Executed when the mouse is pointed at the cell and wheel scrolled up.
+        """
+        pass
+
+    def on_mouse_scroll_down(self):
+        """
+        Executed when the mouse is pointed at the cell and wheel scrolled down.
+        """
+        pass

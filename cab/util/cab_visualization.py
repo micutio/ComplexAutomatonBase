@@ -8,6 +8,8 @@ import pygame.gfxdraw
 from pygame.locals import *
 import math
 
+from cab.util.cab_input_handling import InputHandler
+
 __author__ = 'Michael Wagner'
 
 
@@ -26,6 +28,7 @@ class Visualization:
         self.surface = None
         self.gc = gc
         self.core = cab_core
+        self.io_handler = InputHandler()
 
         # Initialize UI components.
         pygame.init()
@@ -42,6 +45,8 @@ class Visualization:
         pygame.display.set_caption('Complex Automaton Base')
 
     def render_simulation(self):
+        self.io_handler.process_input()
+
         draw_cell = self.draw_cell
         for c in list(self.ca.ca_grid.values()):
             draw_cell(c)

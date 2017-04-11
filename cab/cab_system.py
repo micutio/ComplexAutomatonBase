@@ -10,11 +10,10 @@ Contains the automaton itself.
 
 # Internal Simulation System component imports.
 from cab_global_constants import GlobalConstants
-from abm.cab_abm import ABM
-from ca.cab_ca import CARect
-from ca.cab_ca_hex import CAHex
-from util.cab_input_handling import InputHandler
-from util.cab_visualization import Visualization
+from cab.abm.cab_abm import ABM
+from cab.ca.cab_ca import CARect
+from cab.ca.cab_ca_hex import CAHex
+from cab.util.cab_visualization import Visualization
 
 
 __author__ = 'Michael Wagner'
@@ -26,7 +25,6 @@ class ComplexAutomaton:
     """
 
     def __init__(self, global_constants: GlobalConstants, **kwargs):
-        # proto_cell=None, proto_agent=None, proto_visualizer=None, proto_handler=None):
         """
         Standard initializer.
         :param global_constants: All constants or important variables that control the simulation.
@@ -56,11 +54,6 @@ class ComplexAutomaton:
                 self.ca = CARect(self)
             self.proto_cell = None
 
-        if 'proto_handler' in kwargs:
-            self.handler = kwargs['proto_handler'].clone(self)
-        else:
-            self.handler = InputHandler(cab_core=self)
-
         self.display_info()
         return
 
@@ -73,8 +66,8 @@ class ComplexAutomaton:
               "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
-        self.abm.__init__(self.gc, self.visualizer, self.proto_agent)
-        self.ca.__init__(self, self.visualizer, self.proto_cell)
+        self.abm.__init__(self.gc, proto_agent=self.proto_agent)
+        self.ca.__init__(self, proto_cell=self.proto_cell)
         self.gc.TIME_STEP = 0
 
     def step_simulation(self):
@@ -96,4 +89,3 @@ class ComplexAutomaton:
                 self.step_simulation()
                 self.gc.TIME_STEP += 1
             self.render_simulation()
-            self.handler.process_input()

@@ -38,6 +38,32 @@ class CACell(metaclass=ABCMeta):
     def clone(self, x, y):
         return CACell(x, y, self.gc)
 
+    def on_lmb_click(self):
+        """
+        Executed when the mouse is pointed at the cell and left clicked.
+        To be implemented by the gui class.
+        """
+        pass
+
+    def on_rmb_click(self):
+        """
+        Executed when the mouse is pointed at the cell and right clicked.
+        To be implemented by the gui class.
+        """
+        pass
+
+    def on_mouse_scroll_up(self):
+        """
+        Executed when the mouse is pointed at the cell and wheel scrolled up.
+        """
+        pass
+
+    def on_mouse_scroll_down(self):
+        """
+        Executed when the mouse is pointed at the cell and wheel scrolled down.
+        """
+        pass
+
 
 class CellRect(CACell):
     """
