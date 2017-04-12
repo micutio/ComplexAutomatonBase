@@ -10,6 +10,8 @@ import math
 # Internal Simulation System Component imports.
 from cab.ca.cab_ca_hex import CAHex
 
+from abm.cab_agent import CabAgent
+
 __author__ = 'Michael Wagner'
 
 
@@ -68,13 +70,32 @@ class InputHandler:
         """
         Processing Mouse action. Overwrite to extend!
         """
+        if self.core.gc.USE_HEX_CA:
+            pos_x, pos_y = self.get_mouse_hex_coords()
+        else:
+            pos_x, pos_y = self.get_mouse_rect_coords()
+
         # Click on left mouse button.
         if button == 1:
-            pass
+            # Trigger agent method.
+            if self.core.gc.ONE_AGENT_PER_CELL:
+                self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click()
+            else:
+                for agent in self.core.abm.agent_locations[pos_x, pos_y]:
+                    agent.on_lmb_click()
+            # Trigger cell method.
+            self.core.ca.ca_grid[pos_x, pos_y].on_lmb_click()
 
         # Click on right mouse button.
         elif button == 3:
-            pass
+            # Trigger agent method.
+            if self.core.gc.ONE_AGENT_PER_CELL:
+                self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click()
+            else:
+                for agent in self.core.abm.agent_locations[pos_x, pos_y]:
+                    agent.on_lmb_click()
+            # Trigger cell method.
+            self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click()
 
     def default_keyboard_action(self, active_key):
         """
