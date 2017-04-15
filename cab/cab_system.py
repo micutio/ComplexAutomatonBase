@@ -32,8 +32,6 @@ class ComplexAutomaton:
         """
         self.gc = global_constants
 
-        self.visualizer = Visualization(self.gc, self)
-
         if 'proto_agent' in kwargs:
             self.abm = ABM(self.gc, proto_agent=kwargs['proto_agent'])
             self.proto_agent = kwargs['proto_agent']
@@ -54,8 +52,8 @@ class ComplexAutomaton:
                 self.ca = CARect(self)
             self.proto_cell = None
 
+        self.visualizer = Visualization(self.gc, self)
         self.display_info()
-        return
 
     def display_info(self):
         print("\n {0}, version {1}"

@@ -28,7 +28,7 @@ class Visualization:
         self.surface = None
         self.gc = gc
         self.core = cab_core
-        self.io_handler = InputHandler()
+        self.io_handler = InputHandler(cab_core)
 
         # Initialize UI components.
         pygame.init()

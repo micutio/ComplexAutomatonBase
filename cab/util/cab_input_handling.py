@@ -10,8 +10,6 @@ import math
 # Internal Simulation System Component imports.
 from cab.ca.cab_ca_hex import CAHex
 
-from abm.cab_agent import CabAgent
-
 __author__ = 'Michael Wagner'
 
 
@@ -77,23 +75,25 @@ class InputHandler:
 
         # Click on left mouse button.
         if button == 1:
-            # Trigger agent method.
-            if self.core.gc.ONE_AGENT_PER_CELL:
-                self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click()
-            else:
-                for agent in self.core.abm.agent_locations[pos_x, pos_y]:
-                    agent.on_lmb_click()
+            # Check if agents at this location and trigger their lmb click method.
+            if (pos_x, pos_y) in self.core.abm.agent_locations:
+                if self.core.gc.ONE_AGENT_PER_CELL:
+                    self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click()
+                else:
+                    for agent in self.core.abm.agent_locations[pos_x, pos_y]:
+                        agent.on_lmb_click()
             # Trigger cell method.
             self.core.ca.ca_grid[pos_x, pos_y].on_lmb_click()
 
         # Click on right mouse button.
         elif button == 3:
-            # Trigger agent method.
-            if self.core.gc.ONE_AGENT_PER_CELL:
-                self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click()
-            else:
-                for agent in self.core.abm.agent_locations[pos_x, pos_y]:
-                    agent.on_lmb_click()
+            # Check if agents at this location and trigger their rmb click method.
+            if (pos_x, pos_y) in self.core.abm.agent_locations:
+                if self.core.gc.ONE_AGENT_PER_CELL:
+                    self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click()
+                else:
+                    for agent in self.core.abm.agent_locations[pos_x, pos_y]:
+                        agent.on_lmb_click()
             # Trigger cell method.
             self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click()
 
