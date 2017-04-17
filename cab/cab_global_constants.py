@@ -25,7 +25,7 @@ class GlobalConstants:
         self.CELL_SIZE = 15  # How long/wide is one cell?
         self.GRID_WIDTH = self.DIM_X * self.CELL_SIZE
         self.GRID_HEIGHT = self.DIM_Y * self.CELL_SIZE
-        self.DEFAULT_CELL_COLOR = (42, 48, 34)
+        self.DEFAULT_CELL_COLOR = (34, 42, 48)
         ################################
         # Specifically for Rect. CAs   #
         ################################

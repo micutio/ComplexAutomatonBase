@@ -19,12 +19,19 @@ class CACell(metaclass=ABCMeta):
         self.y = y
         self.gc = gc
         self.neighbors = []
+        self.corners = []
         self.rectangular = True
         self.is_border = False
         self.color = gc.DEFAULT_CELL_COLOR
 
     def set_neighbors(self, neighbors):
         self.neighbors = neighbors
+
+    def set_corners(self):
+        pass
+
+    def get_corners(self):
+        return self.corners
 
     @abstractmethod
     def sense_neighborhood(self):
@@ -74,14 +81,14 @@ class CellRect(CACell):
         super().__init__(x, y, gc)
         self.w = gc.CELL_SIZE
         self.h = gc.CELL_SIZE
+        self.set_corners()
         
-    def get_corners(self):
-        corners = list()
-        corners.append((self.x * self.w, self.y * self.h))
-        corners.append((self.x * self.w + self.w, self.y * self.h))
-        corners.append((self.x * self.w + self.w, self.y * self.h + self.h))
-        corners.append((self.x * self.w, self.y * self.h + self.h))
-        return corners
+    def set_corners(self):
+        self.corners = []
+        self.corners.append((self.x * self.w, self.y * self.h))
+        self.corners.append((self.x * self.w + self.w, self.y * self.h))
+        self.corners.append((self.x * self.w + self.w, self.y * self.h + self.h))
+        self.corners.append((self.x * self.w, self.y * self.h + self.h))
 
     def clone(self, x, y):
         pass
@@ -114,10 +121,10 @@ class CellHex(CACell):
         # self.directions = [(1, -1,  0), (1,  0, -1), ( 0, 1, -1), (-1, 1,  0), (-1,  0, 1), ( 0, -1, 1)]
 
         self.corners = []
-        self.corners = self.get_corners()
+        self.set_corners()
 
-    def get_corners(self):
-        corners = []
+    def set_corners(self):
+        self.corners = []
         for i in range(6):
             angle = 2 * math.pi / 6 * (i + 0.5)
             
@@ -128,8 +135,7 @@ class CellHex(CACell):
             # offset = 1
             # print('x = {0}, y = {1}, offset = {2}'.format(x, y, offset))
             # corners.append((x + offset, y))
-            corners.append((int(x) + int(offset), int(y)))
-        return corners
+            self.corners.append((int(x) + int(offset), int(y)))
 
     def get_cube(self):
         return self.x, self.y, self.z

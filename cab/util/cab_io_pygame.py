@@ -1,5 +1,5 @@
 """
-This module contains a simple visualization class, which the actual simulation visualizer should inherit from.
+This module contains a CAB io implementation in PyGame.
 """
 
 

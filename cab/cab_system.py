@@ -13,7 +13,7 @@ from cab_global_constants import GlobalConstants
 from cab.abm.cab_abm import ABM
 from cab.ca.cab_ca import CARect
 from cab.ca.cab_ca_hex import CAHex
-from cab.util.cab_visualization import Visualization
+from cab.util.cab_io_tk import TkIO
 
 
 __author__ = 'Michael Wagner'
@@ -52,7 +52,7 @@ class ComplexAutomaton:
                 self.ca = CARect(self)
             self.proto_cell = None
 
-        self.visualizer = Visualization(self.gc, self)
+        self.visualizer = TkIO(self.gc, self)
         self.display_info()
 
     def display_info(self):
@@ -82,8 +82,8 @@ class ComplexAutomaton:
         """
         print("simulation log:")
         print()
-        while True:
-            if self.gc.RUN_SIMULATION:
-                self.step_simulation()
-                self.gc.TIME_STEP += 1
-            self.render_simulation()
+        self.visualizer.render_simulation()
+        # while True:
+        #     if self.gc.RUN_SIMULATION:
+        #         self.step_simulation()
+        #     self.render_simulation()
