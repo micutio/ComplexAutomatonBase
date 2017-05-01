@@ -28,6 +28,7 @@ class ABM:
         # Have all agents perceive and act in a random order
         # While we're at it, look for dead agents to remove
         # changed_agents = []
+        self.new_agents = list()
         for a in self.agent_set:
             a.perceive_and_act(self, ca)
             if a.x != a.prev_x or a.y != a.prev_y:
@@ -82,7 +83,7 @@ class ABM:
             #             self.agent_locations[pos].add(agent)
             #         else:
             #             self.agent_locations[pos] = {agent}
-        self.new_agents = list()
+        # self.new_agents = list()
 
     def remove_agent(self, agent):
         """

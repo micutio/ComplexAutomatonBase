@@ -45,14 +45,14 @@ class CACell(metaclass=ABCMeta):
     def clone(self, x, y):
         return CACell(x, y, self.gc)
 
-    def on_lmb_click(self):
+    def on_lmb_click(self, abm, ca):
         """
         Executed when the mouse is pointed at the cell and left clicked.
         To be implemented by the gui class.
         """
         pass
 
-    def on_rmb_click(self):
+    def on_rmb_click(self, abm, ca):
         """
         Executed when the mouse is pointed at the cell and right clicked.
         To be implemented by the gui class.
