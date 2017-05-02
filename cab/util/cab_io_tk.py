@@ -26,8 +26,8 @@ class TkIO:
         self.height = 0
         self.root.title("Complex Automaton")
         self.canvas = None
-        self.cell_map = {}
-        self.agent_map = {}
+        self.cell_shape_mapping = list()
+        self.agent_shape_mapping = list()
 
         self.input_actions = TkInputActions(gc, cab_core, self.canvas)
         self.init_canvas()
@@ -58,76 +58,46 @@ class TkIO:
             col_o = self.get_color_string((0, 0, 0))
             polygon = self.canvas.create_polygon(corners_list, fill=col_f, outline=col_o)
             old_color = v.color
-            self.cell_map[k] = (polygon, v, old_color)
-
-    def add_to_agent_map(self, key, agent):
-        x1 = agent.x - self.core.gc.CELL_SIZE
-        y1 = agent.y - self.core.gc.CELL_SIZE
-        x2 = agent.x + self.core.gc.CELL_SIZE
-        y2 = agent.y + self.core.gc.CELL_SIZE
-        col_f = self.get_color_string(agent.color)
-        col_o = self.get_color_string((0, 0, 0))
-        circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
-        old_color = agent.color
-        if self.gc.ONE_AGENT_PER_CELL:
-            self.agent_map[key] = (circle, agent, old_color)
-        else:
-            if key in self.agent_map:
-                self.agent_map[key].append((circle, agent, old_color))
-            else:
-                self.agent_map[key] = [(circle, agent, old_color)]
+            self.cell_shape_mapping.append((polygon, v, old_color))
 
     def init_agents(self):
-        if self.gc.ONE_AGENT_PER_CELL:
-            for k, v in list(self.core.abm.agent_locations.items()):
-                self.add_to_agent_map(k, v)
-        else:
-            for k, v in list(self.core.abm.agent_locations.items()):
-                for agent in v:
-                    self.add_to_agent_map(k, v)
-
+        for agent in self.core.abm.agent_set:
+            x1 = agent.x - self.core.gc.CELL_SIZE
+            y1 = agent.y - self.core.gc.CELL_SIZE
+            x2 = agent.x + self.core.gc.CELL_SIZE
+            y2 = agent.y + self.core.gc.CELL_SIZE
+            col_f = self.get_color_string(agent.color)
+            col_o = self.get_color_string((0, 0, 0))
+            circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
+            old_color = agent.color
+            self.agent_shape_mapping.append((circle, agent, old_color))
 
     def update_cells(self):
-        for k, v in list(self.cell_map.items()):
-            if v[1].color != v[2]:
-                col = '#%02x%02x%02x' % v[1].color
-                self.canvas.itemconfig(v[0], fill=col)
-                old_color = v[1].color
-                self.cell_map[k] = (v[0], v[1], old_color)
+        new_list = list()
+        for triple in self.cell_shape_mapping:
+            if triple[1].color != triple[2]:
+                col = self.get_color_string(triple[1].color)
+                self.canvas.itemconfig(triple[0], fill=col)
+                old_color = triple[1].color
+                new_list.append((triple[0], triple[1], old_color))
+            else:
+                new_list.append(triple)
+        self.cell_shape_mapping = new_list
 
     def update_agents(self):
-        if self.gc.ONE_AGENT_PER_CELL:
-            for k, v in self.agent_map:
-                # TODO: Take care of new agents.
-                for agent in self.core.abm.new_agents:
-                    # TODO: This is reused from self.init_agents(), outsource to separate function.
-                    self.add_to_agent_map(k, v)
-                # Take care of deleted agents.
-                if k not in self.core.abm.agent_locations:
-                    self.canvas.delete(v[0])
-                    self.agent_map.pop(k)
-                    continue
-                if v[1].x != v[1].prev_x or v[1].y != v[1].prev_y:
-                    dx = (v[1].x - v[1].prev_x)
-                    dy = (v[1].y - v[1].prev_y)
-                    self.canvas.move(v[0], dx, dy)
-                if v[1].color != v[2]:
-                    col = self.get_color_string(v[1].color)
-                    self.canvas.itemconfig(v[0], fill=col)
-                    old_color = v[1].color
-                    self.agent_map[k] = (v[0], v[1], old_color)
-        else:
-            for k, agent_list in self.agent_map:
-                for agent in agent_list:
-                    if agent[1].x != agent[1].prev_x or agent[1].y != agent[1].prev_y:
-                        dx = (agent[1].x - agent[1].prev_x)
-                        dy = (agent[1].y - agent[1].prev_y)
-                        self.canvas.move(agent[0], dx, dy)
-                    if agent[1].color != agent[2]:
-                        col = self.get_color_string(agent[1].color)
-                        self.canvas.itemconfig(agent[0], fill=col)
-                        old_color = agent[1].color
-                        self.agent_map[k] = (agent[0], agent[1], old_color)
+        new_list = list()
+        for triple in self.agent_shape_mapping:
+            if triple[1].color != triple[2]:
+                col = self.get_color_string(triple[1].color)
+                self.canvas.itemconfig(triple[0], fill=col)
+                old_color = triple[1].color
+                new_list.append((triple[0], triple[1], old_color))
+            if triple[1].x != triple[1].prev_x or triple[1].y != triple[1].prev_y:
+                dx = triple[1].x - triple[1].prev_x
+                dy = triple[1].y - triple[1].prev_y
+                self.canvas.move(triple[0], dx, dy)
+                new_list.append(triple)
+        self.agent_shape_mapping = new_list
 
     def render_frame(self):
         """Draws a new frame every N milliseconds"""

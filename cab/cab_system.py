@@ -69,6 +69,7 @@ class ComplexAutomaton:
         self.gc.TIME_STEP = 0
 
     def step_simulation(self):
+        print('stepping simulation')
         self.abm.cycle_system(self.ca)
         self.ca.cycle_automaton()
         self.gc.TIME_STEP += 1

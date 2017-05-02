@@ -17,7 +17,8 @@ class ABM:
         self.agent_set = set()
         self.agent_locations = dict()
         self.gc = gc
-        self.new_agents = []
+        self.new_agents = list()
+        self.dead_agents = list()
         if proto_agent is not None:
             self.add_agent(proto_agent)
 
@@ -29,13 +30,14 @@ class ABM:
         # While we're at it, look for dead agents to remove
         # changed_agents = []
         self.new_agents = list()
+        self.dead_agents = list()
         for a in self.agent_set:
             a.perceive_and_act(self, ca)
             if a.x != a.prev_x or a.y != a.prev_y:
                 self.update_agent_position(a)
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
-        dead_agents = [agent for agent in self.agent_set if agent.dead]
-        for agent in dead_agents:
+        self.dead_agents = [agent for agent in self.agent_set if agent.dead]
+        for agent in self.dead_agents:
             self.remove_agent(agent)
         self.schedule_new_agents()
 
