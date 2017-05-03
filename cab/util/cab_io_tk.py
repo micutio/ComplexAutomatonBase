@@ -29,12 +29,11 @@ class TkIO:
         self.cell_shape_mapping = list()
         self.agent_shape_mapping = list()
 
-        self.input_actions = TkInputActions(gc, cab_core, self.canvas)
         self.init_canvas()
-        self.init_cells()
-        self.init_agents()
+        self.init_cell_shape_mapping()
+        self.init_agent_shape_mapping()
 
-        self.input_actions = TkInputActions(self.gc, self.core, self.root)
+        self.input_actions = TkInputActions(self)
         self.input_actions.set_binds()
 
     def init_canvas(self):
@@ -51,7 +50,7 @@ class TkIO:
         self.canvas = Canvas(self.root, width=self.width, height=self.height, bg=col)
         self.canvas.pack()
 
-    def init_cells(self):
+    def init_cell_shape_mapping(self):
         for k, v in list(self.core.ca.ca_grid.items()):
             corners_list = [i for tupl in v.get_corners() for i in tupl]
             col_f = self.get_color_string(v.color)
@@ -60,9 +59,9 @@ class TkIO:
             old_color = v.color
             self.cell_shape_mapping.append((polygon, v, old_color))
 
-    def init_agents(self):
+    def init_agent_shape_mapping(self):
         for agent in self.core.abm.agent_set:
-            radius = int(agent.size / 1.5)
+            radius = int(agent.size / 1.25)
 
             horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
             offset = agent.y * (horiz / 2)
@@ -76,28 +75,37 @@ class TkIO:
             y2 = y + radius
 
             col_f = self.get_color_string(agent.color)
-            col_o = self.get_color_string((0, 0, 0))
+            if self.gc.DISPLAY_GRID:
+                col_o = self.get_color_string((0, 0, 0))
+            else:
+                col_o = self.get_color_string(agent.color)
             circle = self.canvas.create_oval([x, y1, x2, y2], fill=col_f, outline=col_o)
             old_color = agent.color
             self.agent_shape_mapping.append((circle, agent, old_color))
 
     def update_cells(self):
         new_list = list()
-        for triple in self.cell_shape_mapping:
-            if triple[1].color != triple[2]:
-                col = self.get_color_string(triple[1].color)
-                self.canvas.itemconfig(triple[0], fill=col)
-                old_color = triple[1].color
-                new_list.append((triple[0], triple[1], old_color))
+        for (polygon, cell, color) in self.cell_shape_mapping:
+            if cell.color != color:
+                col = self.get_color_string(cell.color)
+                self.canvas.itemconfig(polygon, fill=col)
+                old_color = cell.color
+                new_list.append((polygon, cell, old_color))
             else:
-                new_list.append(triple)
+                new_list.append((polygon, cell, color))
+            # Update grid drawing
+            if self.gc.DISPLAY_GRID:
+                col_o = self.get_color_string((0, 0, 0))
+            else:
+                col_o = self.get_color_string(cell.color)
+            self.canvas.itemconfig(polygon, outline=col_o)
         self.cell_shape_mapping = new_list
 
     def update_agents(self):
         new_list = list()
         # Add agents that are new to the simulation.
         for agent in self.core.abm.new_agents:
-            radius = int(agent.size / 1.5)
+            radius = int(agent.size / 0.9)
 
             horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
             offset = agent.y * (horiz / 2)
@@ -115,28 +123,47 @@ class TkIO:
             circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
             old_color = agent.color
             self.agent_shape_mapping.append((circle, agent, old_color))
+        self.core.abm.new_agents = list()
 
         # TODO: remove agents that are dead.
         # Update existing agents.
-        for triple in self.agent_shape_mapping:
-            if triple[1].color != triple[2]:
-                col = self.get_color_string(triple[1].color)
-                self.canvas.itemconfig(triple[0], fill=col)
-                old_color = triple[1].color
-                new_list.append((triple[0], triple[1], old_color))
-            if triple[1].x != triple[1].prev_x or triple[1].y != triple[1].prev_y:
-                dx = triple[1].x - triple[1].prev_x
-                dy = triple[1].y - triple[1].prev_y
-                self.canvas.move(triple[0], dx, dy)
-                new_list.append(triple)
+        for (oval, agent, color) in self.agent_shape_mapping:
+            if agent.color != color:
+                col = self.get_color_string(agent.color)
+                self.canvas.itemconfig(oval, fill=col)
+                color = agent.color
+            if self.gc.RUN_SIMULATION and (agent.x != agent.prev_x or agent.y != agent.prev_y) :
+                # Calculate position change
+                horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
+                offset1 = agent.y * (horiz / 2)
+                offset2 = agent.prev_y * (horiz / 2)
+                x1 = int(agent.x * horiz) + int(offset1)
+                x2 = int(agent.prev_x * horiz) + int(offset2)
+                vert = self.gc.CELL_SIZE * 2 * (3 / 4)
+                y1 = int(agent.y * vert)
+                y2 = int(agent.prev_y * vert)
+                dx = x1 - x2
+                dy = y1 - y2
+                self.canvas.move(oval, dx, dy)
+            new_list.append((oval, agent, color))
         self.agent_shape_mapping = new_list
+
+    def clear_cell_shape_mapping(self):
+        for (polygon, cell, old_color) in self.cell_shape_mapping:
+            self.canvas.delete(polygon)
+        self.cell_shape_mapping = list()
+
+    def clear_agent_shape_mapping(self):
+        for (oval, agent, old_color) in self.agent_shape_mapping:
+            self.canvas.delete(oval)
+        self.agent_shape_mapping = list()
 
     def render_frame(self):
         """Draws a new frame every N milliseconds"""
-        if self.gc.RUN_SIMULATION:
-            self.core.step_simulation()
         self.update_cells()
         self.update_agents()
+        if self.gc.RUN_SIMULATION:
+            self.core.step_simulation()
         self.root.after(1, self.render_frame)
 
     def render_simulation(self):
@@ -149,10 +176,11 @@ class TkIO:
 
 class TkInputActions:
 
-    def __init__(self, gc, cab_core, root):
-        self.gc = gc
-        self.core = cab_core
-        self.root = root
+    def __init__(self, ui):
+        self.gc = ui.gc
+        self.core = ui.core
+        self.root = ui.root
+        self.ui = ui
         self.mx = 0
         self.my = 0
 
@@ -161,6 +189,7 @@ class TkInputActions:
         self.root.bind('s', self.key_s)
         self.root.bind('r', self.key_r)
         self.root.bind('q', self.key_q)
+        self.root.bind('g', self.key_g)
         self.root.bind('<Button-1>', self.mouse_left)
         self.root.bind('<Button-2>', self.mouse_wheel)
         self.root.bind('<Button-3>', self.mouse_right)
@@ -179,10 +208,21 @@ class TkInputActions:
     def key_r(self, event):
         print(' < simulation reset')
         self.core.reset_simulation()
+        self.ui.clear_cell_shape_mapping()
+        self.ui.clear_agent_shape.mapping()
+        self.ui.init_cell_shape_mapping()
+        self.ui.init_agent_shape_mapping()
 
     def key_q(self, event):
         print(' < shutting down... Bye!')
         sys.exit()
+
+    def key_g(self, event):
+        self.gc.DISPLAY_GRID = not self.gc.DISPLAY_GRID
+        if self.gc.DISPLAY_GRID:
+            print(' > showing grid')
+        else:
+            print(' > hiding grid')
 
     def mouse_motion(self, event):
         self.mx = (event.x / self.core.gc.CELL_SIZE)

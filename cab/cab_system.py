@@ -64,18 +64,15 @@ class ComplexAutomaton:
               "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
+        print('resetting simulation')
         self.abm.__init__(self.gc, proto_agent=self.proto_agent)
         self.ca.__init__(self, proto_cell=self.proto_cell)
         self.gc.TIME_STEP = 0
 
     def step_simulation(self):
-        print('stepping simulation')
         self.abm.cycle_system(self.ca)
         self.ca.cycle_automaton()
         self.gc.TIME_STEP += 1
-
-    def render_simulation(self):
-        self.visualizer.render_simulation()
 
     def run_main_loop(self):
         """
