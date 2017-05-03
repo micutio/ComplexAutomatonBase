@@ -62,13 +62,22 @@ class TkIO:
 
     def init_agents(self):
         for agent in self.core.abm.agent_set:
-            x1 = agent.x - self.core.gc.CELL_SIZE
-            y1 = agent.y - self.core.gc.CELL_SIZE
-            x2 = agent.x + self.core.gc.CELL_SIZE
-            y2 = agent.y + self.core.gc.CELL_SIZE
+            radius = int(agent.size / 1.5)
+
+            horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
+            offset = agent.y * (horiz / 2)
+            x = int(agent.x * horiz) + int(offset)
+            x1 = x - radius
+            x2 = x + radius
+
+            vert = self.gc.CELL_SIZE * 2 * (3 / 4)
+            y = int(agent.y * vert)
+            y1 = y - radius
+            y2 = y + radius
+
             col_f = self.get_color_string(agent.color)
             col_o = self.get_color_string((0, 0, 0))
-            circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
+            circle = self.canvas.create_oval([x, y1, x2, y2], fill=col_f, outline=col_o)
             old_color = agent.color
             self.agent_shape_mapping.append((circle, agent, old_color))
 
@@ -86,6 +95,29 @@ class TkIO:
 
     def update_agents(self):
         new_list = list()
+        # Add agents that are new to the simulation.
+        for agent in self.core.abm.new_agents:
+            radius = int(agent.size / 1.5)
+
+            horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
+            offset = agent.y * (horiz / 2)
+            x = int(agent.x * horiz) + int(offset)
+            x1 = x - radius
+            x2 = x + radius
+
+            vert = self.gc.CELL_SIZE * 2 * (3 / 4)
+            y = int(agent.y * vert)
+            y1 = y - radius
+            y2 = y + radius
+
+            col_f = self.get_color_string(agent.color)
+            col_o = self.get_color_string((0, 0, 0))
+            circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
+            old_color = agent.color
+            self.agent_shape_mapping.append((circle, agent, old_color))
+
+        # TODO: remove agents that are dead.
+        # Update existing agents.
         for triple in self.agent_shape_mapping:
             if triple[1].color != triple[2]:
                 col = self.get_color_string(triple[1].color)
