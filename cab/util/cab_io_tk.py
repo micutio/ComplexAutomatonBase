@@ -10,18 +10,19 @@ from tkinter import Tk, Canvas
 # Internal Simulation System component imports.
 from cab.ca.cab_ca_hex import CAHex
 
+from util.cab_io_interface import IoInterface
+
 __author__ = 'Michael Wagner'
 
 
-class TkIO:
+class TkIO(IoInterface):
     """
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
     def __init__(self, gc, cab_core):
+        super().__init__(gc, cab_core)
         self.root = Tk()
-        self.gc = gc
-        self.core = cab_core
         self.width = 0
         self.height = 0
         self.root.title("Complex Automaton")

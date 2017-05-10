@@ -52,6 +52,8 @@ class ComplexAutomaton:
                 self.ca = CARect(self)
             self.proto_cell = None
 
+        # TODO: Make this dependent on global constants
+        # PygameIO() | TkIO() | QtIO()
         self.visualizer = TkIO(self.gc, self)
         self.display_info()
 
@@ -81,7 +83,3 @@ class ComplexAutomaton:
         print("simulation log:")
         print()
         self.visualizer.render_simulation()
-        # while True:
-        #     if self.gc.RUN_SIMULATION:
-        #         self.step_simulation()
-        #     self.render_simulation()

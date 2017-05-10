@@ -2,7 +2,6 @@
 This module contains a CAB io implementation in PyGame.
 """
 
-
 import pygame
 import pygame.gfxdraw
 from pygame.locals import *
@@ -10,10 +9,12 @@ import math
 
 from cab.util.cab_input_handling import InputHandler
 
+from util.cab_io_interface import IoInterface
+
 __author__ = 'Michael Wagner'
 
 
-class Visualization:
+class PygameIO(IoInterface):
     """
     This class incorporates all methods necessary for visualizing the simulation.
     """
@@ -23,11 +24,10 @@ class Visualization:
         Initializes the visualization and passes the surface on which to draw.
         :param surface: Pygame surface object.
         """
+        super().__init__(gc, cab_core)
         self.abm = cab_core.abm
         self.ca = cab_core.ca
         self.surface = None
-        self.gc = gc
-        self.core = cab_core
         self.io_handler = InputHandler(cab_core)
 
         # Initialize UI components.
@@ -44,6 +44,18 @@ class Visualization:
         self.surface = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
         pygame.display.set_caption('Complex Automaton Base')
 
+    def render_frame(self):
+        self.io_handler.process_input()
+
+        draw_cell = self.draw_cell
+        for c in list(self.ca.ca_grid.values()):
+            draw_cell(c)
+        draw_agent = self.draw_agent
+        for a in self.abm.agent_set:
+            draw_agent(a)
+        pygame.display.flip()
+
+# TODO: Change render_simulation to fit the whole simulation loop inside.
     def render_simulation(self):
         self.io_handler.process_input()
 
