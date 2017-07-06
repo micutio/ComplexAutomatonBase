@@ -10,7 +10,7 @@ from tkinter import Tk, Canvas
 # Internal Simulation System component imports.
 from cab.ca.cab_ca_hex import CAHex
 
-from util.cab_io_interface import IoInterface
+from cab.util.cab_io_interface import IoInterface
 
 __author__ = 'Michael Wagner'
 
@@ -210,7 +210,7 @@ class TkInputActions:
         print(' < simulation reset')
         self.core.reset_simulation()
         self.ui.clear_cell_shape_mapping()
-        self.ui.clear_agent_shape.mapping()
+        self.ui.clear_agent_shape_mapping()
         self.ui.init_cell_shape_mapping()
         self.ui.init_agent_shape_mapping()
 

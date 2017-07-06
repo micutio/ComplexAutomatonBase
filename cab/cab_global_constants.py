@@ -9,6 +9,7 @@ class GlobalConstants:
     def __init__(self):
         self.VERSION = "version: 09-2014"
         self.TITLE = "TITLE"
+        self.gui = "TK"  # Options: "TK", "PyGame"
         ################################
         #     SIMULATION CONSTANTS     #
         ################################

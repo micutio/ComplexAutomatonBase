@@ -7,9 +7,9 @@ import pygame.gfxdraw
 from pygame.locals import *
 import math
 
-from cab.util.cab_input_handling import InputHandler
+from cab.util.cab_io_pygame_input import InputHandler
 
-from util.cab_io_interface import IoInterface
+from cab.util.cab_io_interface import IoInterface
 
 __author__ = 'Michael Wagner'
 

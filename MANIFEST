@@ -12,7 +12,9 @@ cab/ca/cab_ca.py
 cab/ca/cab_ca_hex.py
 cab/ca/cab_cell.py
 cab/util/__init__.py
+cab/util/cab_io_interface.py
 cab/util/cab_io_pygame.py
 cab/util/cab_io_pygame_input.py
+cab/util/cab_io_qt.py
 cab/util/cab_io_tk.py
 cab/util/cab_statistics.py

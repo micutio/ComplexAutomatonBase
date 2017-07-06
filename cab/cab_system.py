@@ -9,12 +9,13 @@ Contains the automaton itself.
 # from pygame.locals import *
 
 # Internal Simulation System component imports.
-from cab_global_constants import GlobalConstants
+from cab.cab_global_constants import GlobalConstants
 from cab.abm.cab_abm import ABM
 from cab.ca.cab_ca import CARect
 from cab.ca.cab_ca_hex import CAHex
 from cab.util.cab_io_tk import TkIO
 
+from cab.util.cab_io_pygame import PygameIO
 
 __author__ = 'Michael Wagner'
 
@@ -54,7 +55,10 @@ class ComplexAutomaton:
 
         # TODO: Make this dependent on global constants
         # PygameIO() | TkIO() | QtIO()
-        self.visualizer = TkIO(self.gc, self)
+        if self.gc.gui == "TK":
+            self.visualizer = TkIO(self.gc, self)
+        elif self.gui == "PyGame":
+            self.visualizer = PygameIO(self.gc, self)
         self.display_info()
 
     def display_info(self):
