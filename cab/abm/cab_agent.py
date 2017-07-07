@@ -49,12 +49,12 @@ class CabAgent(metaclass=ABCMeta):
 
     def on_mouse_scroll_up(self, abm, ca):
         """
-        Executed when the mouse is pointed at the cell and wheel scrolled up.
+        Executed when the mouse is pointed at the agent and wheel scrolled up.
         """
         pass
 
     def on_mouse_scroll_down(self, abm, ca):
         """
-        Executed when the mouse is pointed at the cell and wheel scrolled down.
+        Executed when the mouse is pointed at the agent and wheel scrolled down.
         """
         pass
