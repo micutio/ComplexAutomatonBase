@@ -1,4 +1,5 @@
 build
+dist
 inst
 .idea
 cab/__pycache__/
