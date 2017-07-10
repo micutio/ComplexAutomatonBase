@@ -21,6 +21,7 @@ class ABM:
         self.dead_agents = list()
         if proto_agent is not None:
             self.add_agent(proto_agent)
+            self.schedule_new_agents()
 
     def cycle_system(self, ca):
         """

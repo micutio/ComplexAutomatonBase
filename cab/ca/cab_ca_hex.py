@@ -5,7 +5,7 @@ This module contains the class for a CA with hexagonal cells in pointy top layou
 from cab.ca.cab_cell import CellHex
 
 import math
-import random
+import cab.util.cab_rng
 
 __author__ = 'Michael Wagner'
 
@@ -191,7 +191,7 @@ class CAHex:
         Returns coordinates of a random cell position that is within the boundaries of the grid.
         :return: Coordinates in hex form.
         """
-        return random.choice(list(self.ca_grid.keys()))
+        return get_RNG().choice(list(self.ca_grid.keys()))
 
     @staticmethod
     def hex_round(q, r):

@@ -62,27 +62,28 @@ class TkIO(IoInterface):
 
     def init_agent_shape_mapping(self):
         for agent in self.core.abm.agent_set:
-            radius = int(agent.size / 1.25)
+            if (not agent.x is None) and (not agent.y is None):
+                radius = int(agent.size / 1.25)
 
-            horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
-            offset = agent.y * (horiz / 2)
-            x = int(agent.x * horiz) + int(offset)
-            x1 = x - radius
-            x2 = x + radius
+                horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
+                offset = agent.y * (horiz / 2)
+                x = int(agent.x * horiz) + int(offset)
+                x1 = x - radius
+                x2 = x + radius
 
-            vert = self.gc.CELL_SIZE * 2 * (3 / 4)
-            y = int(agent.y * vert)
-            y1 = y - radius
-            y2 = y + radius
+                vert = self.gc.CELL_SIZE * 2 * (3 / 4)
+                y = int(agent.y * vert)
+                y1 = y - radius
+                y2 = y + radius
 
-            col_f = self.get_color_string(agent.color)
-            if self.gc.DISPLAY_GRID:
-                col_o = self.get_color_string((0, 0, 0))
-            else:
-                col_o = self.get_color_string(agent.color)
-            circle = self.canvas.create_oval([x, y1, x2, y2], fill=col_f, outline=col_o)
-            old_color = agent.color
-            self.agent_shape_mapping.append((circle, agent, old_color))
+                col_f = self.get_color_string(agent.color)
+                if self.gc.DISPLAY_GRID:
+                    col_o = self.get_color_string((0, 0, 0))
+                else:
+                    col_o = self.get_color_string(agent.color)
+                circle = self.canvas.create_oval([x, y1, x2, y2], fill=col_f, outline=col_o)
+                old_color = agent.color
+                self.agent_shape_mapping.append((circle, agent, old_color))
 
     def update_cells(self):
         new_list = list()
@@ -106,25 +107,27 @@ class TkIO(IoInterface):
         new_list = list()
         # Add agents that are new to the simulation.
         for agent in self.core.abm.new_agents:
-            radius = int(agent.size / 0.9)
+            if (not agent.x is None) and (not agent.y is None):
+                radius = int(agent.size / 0.9)
 
-            horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
-            offset = agent.y * (horiz / 2)
-            x = int(agent.x * horiz) + int(offset)
-            x1 = x - radius
-            x2 = x + radius
+                horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
+                offset = agent.y * (horiz / 2)
+                x = int(agent.x * horiz) + int(offset)
+                x1 = x - radius
+                x2 = x + radius
 
-            vert = self.gc.CELL_SIZE * 2 * (3 / 4)
-            y = int(agent.y * vert)
-            y1 = y - radius
-            y2 = y + radius
+                vert = self.gc.CELL_SIZE * 2 * (3 / 4)
+                y = int(agent.y * vert)
+                y1 = y - radius
+                y2 = y + radius
 
-            col_f = self.get_color_string(agent.color)
-            col_o = self.get_color_string((0, 0, 0))
-            circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
-            old_color = agent.color
-            self.agent_shape_mapping.append((circle, agent, old_color))
-        self.core.abm.new_agents = list()
+                col_f = self.get_color_string(agent.color)
+                col_o = self.get_color_string((0, 0, 0))
+                circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
+                old_color = agent.color
+                self.agent_shape_mapping.append((circle, agent, old_color))
+ 
+        # self.core.abm.new_agents = list()
 
         # TODO: remove agents that are dead.
         # Update existing agents.

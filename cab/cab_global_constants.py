@@ -7,12 +7,13 @@ __author__ = 'Michael Wagner'
 
 class GlobalConstants:
     def __init__(self):
-        self.VERSION = "version: 09-2014"
+        self.VERSION = "version: 07-2017"
         self.TITLE = "TITLE"
         self.gui = "TK"  # Options: "TK", "PyGame"
         ################################
         #     SIMULATION CONSTANTS     #
         ################################
+        self.RNG_SEED = "ABCDL"
         self.RUN_SIMULATION = False
         self.TIME_STEP = 0
         self.ONE_AGENT_PER_CELL = False

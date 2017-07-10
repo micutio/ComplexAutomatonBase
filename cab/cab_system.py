@@ -13,9 +13,11 @@ from cab.cab_global_constants import GlobalConstants
 from cab.abm.cab_abm import ABM
 from cab.ca.cab_ca import CARect
 from cab.ca.cab_ca_hex import CAHex
-from cab.util.cab_io_tk import TkIO
 
+from cab.util.cab_io_tk import TkIO
 from cab.util.cab_io_pygame import PygameIO
+
+from cab.util.cab_rng import seed_RNG
 
 __author__ = 'Michael Wagner'
 
@@ -32,6 +34,7 @@ class ComplexAutomaton:
         :param kwargs**: cell prototype, agent prototype, visualizer prototype and IO handler prototype.
         """
         self.gc = global_constants
+        seed_RNG(self.gc.RNG_SEED)
 
         if 'proto_agent' in kwargs:
             self.abm = ABM(self.gc, proto_agent=kwargs['proto_agent'])
