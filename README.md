@@ -20,8 +20,8 @@ explored by using complex automata.
 
 This project is definitely for you if:
 
-* you want to explore ideas about systems that exhibit decentralization
-and organic growth, but pen and paper are too cumbersome
+* you want to explore and play around with ideas about systems that exhibit decentralization
+and organic growth
 
 * you like to build and play around with artificial worlds
 
@@ -39,7 +39,7 @@ Then run 2_install_dist.sh to install the library into your local python directo
 Import ComplexAutomatonBase in your scripts by using "import cab"
 
 To remove, execute 3_uninst_dist_solus.sh or 3_uninst_dist_ubuntu.sh, depending on your operating system.
-This will be changed in the future to make the install and uninstall process distro agnostic.
+This will be changed in the future to make the install and uninstall process operating system agnostic.
 
 ## How to use it
 
