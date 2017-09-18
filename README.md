@@ -43,7 +43,7 @@ This will be changed in the future to make the install and uninstall process ope
 
 ## How to use it
 
-The repository over at [CAB-Simulations](https://github.com/micution/CAB_Simulations)
+The repository over at [CAB-Simulations](https://github.com/micutio/CAB_Simulations)
 contains a small number of example applications which can be used to start off
 and explore the capabilities of the framework. To further help you along, have
 a look a the templates, which can give you a head start in programming new
