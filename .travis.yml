@@ -3,4 +3,4 @@ python:
     - 3.4
     - 3.5
     - 3.6
-script: test_cab.py
+script: python -m unittest discover
