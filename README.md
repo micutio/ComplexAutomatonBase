@@ -1,4 +1,5 @@
-# ComplexAutomatonBase [![Build Status](https://travis-ci.org/travis-ci/travis-web.svg?branch=master)](https://travis-ci.org/travis-ci/travis-web)
+# ComplexAutomatonBase [<img src="https://travis-ci.org/Micutio/ComplexAutomatonBase.svg?branch=master">](https://travis-ci.org/Micutio/ComplexAutomatonBase)
+
 Minimalistic Framework for Complex Automata
 
 ## About
