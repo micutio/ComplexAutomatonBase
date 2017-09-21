@@ -3,4 +3,4 @@ python:
     - 3.4
     - 3.5
     - 3.6
-script: test/test_cab.py
+script: test_cab.py
