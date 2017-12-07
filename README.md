@@ -16,10 +16,7 @@ ants or bees, natural phenomena like forest fires or human behavior and man-made
 ecosystems like urban sprawl and land use development are all fields that can be
 explored by using complex automata.
 
-
-## Is this interesting for me?
-
-This project is definitely for you if:
+This project might be interesting for you if:
 
 * you want to explore and play around with ideas about systems that exhibit decentralization
 and organic growth
