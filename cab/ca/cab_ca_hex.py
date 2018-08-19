@@ -4,6 +4,8 @@ This module contains the class for a CA with hexagonal cells in pointy top layou
 
 from cab.ca.cab_cell import CellHex
 
+from multiprocessing import Pool
+
 import math
 import cab.util.cab_rng
 
@@ -103,8 +105,15 @@ class CAHex:
         """
         Call the neighborhood-update method of all cells in the cellular automaton.
         """
+        # print("CAHex::update_cells_from_neighborhood: creating pool")
+        # with Pool(processes=4) as pool:
+        #     for cell in self.ca_grid.values():
+        #         pool.apply_async(self.update_cell_neighborhood, args=(cell,))
         for cell in self.ca_grid.values():
             cell.sense_neighborhood()
+
+    def update_cell_neighborhood(self, cell):
+        cell.sense_neighborhood()
 
     def update_cells_state(self):
         """
@@ -112,6 +121,13 @@ class CAHex:
         """
         for cell in self.ca_grid.values():
             cell.update()
+        # print("CAHex::update_cells_state: creating pool")
+        # with Pool(processes=4) as pool:
+        #     for cell in self.ca_grid.values():
+        #         pool.apply_async(self.update_cell_state, args=(cell,))
+
+    def update_cell_state(self, cell):
+        cell.update()
 
     def get_cell_neighborhood(self, cell_x, cell_y, dist):
         """
@@ -158,7 +174,7 @@ class CAHex:
         new_neighborhood = {}
         other_agents = self.sys.abm.agent_locations
 
-    # This is the slimmed down version that also considers wrapping around ca borders.
+        # This is the slimmed down version that also considers wrapping around ca borders.
         for key, value in neighborhood.items():
             if key not in other_agents:
                 agents_on_cell = False
