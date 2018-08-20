@@ -4,7 +4,7 @@ Minimalistic Framework for Complex Automata
 
 ## About
 
-The **C**omplex **A**utomaton **B**ase offers a foundation for agent-based simulations.
+The Complex Automaton Base, or CAB in short, offers a foundation for agent-based simulations.
 These simulations take place in a two-dimensional world that consists of either
 a rectangular or a hexagonal grid. Such worlds can either have a life on their
 own or be populated with so-called agents which occupy one cell at a time but
@@ -50,3 +50,12 @@ one single file, and a slightly more advanced example with the recommended
 project structure for more complex simulations.
 
 A fleshed out tutorial will be added eventually of course.
+
+## TODOs
+
+- a logger to easily select between normal and debug console output
+- type annotations in the source code, for better readability
+- use *configparser* to outsource simulation configs from python files to text config files
+- create unit tests
+- use dataclass decorator where appropriate
+- look into zipapp and other ways of packing & distribution
