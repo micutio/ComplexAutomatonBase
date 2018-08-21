@@ -6,6 +6,7 @@ from typing import Dict, Tuple, Union
 
 from cab.cab_system import ComplexAutomaton
 from cab.ca.cab_cell import CellHex
+from cab.ca.cab_ca import CabCA
 
 from multiprocessing import Pool
 
@@ -15,7 +16,7 @@ from cab.util.cab_rng import get_RNG
 __author__ = 'Michael Wagner'
 
 
-class CAHex:
+class CAHex(CabCA):
     """
     For reference go to "http://www.redblobgames.com/grids/hexagons/"
     Hex CA parameters:
@@ -24,12 +25,13 @@ class CAHex:
     - axial coordinates for storage
     """
 
-    def __init__(self, cab_sys: ComplexAutomaton, proto_cell: CellHex=None):
+    def __init__(self, cab_sys: ComplexAutomaton, proto_cell: CellHex = None):
         """
         Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
         where the values are the cells with their q,r-coordinates as keys.
         :returns the initialized CA.
         """
+        super().__init__(cab_sys, proto_cell)
         self.ca_grid: Dict[Tuple[int, int], CellHex] = dict()
         self.sys: ComplexAutomaton = cab_sys
         self.grid_height: int = self.sys.gc.GRID_HEIGHT
@@ -116,7 +118,8 @@ class CAHex:
         for cell in self.ca_grid.values():
             cell.sense_neighborhood()
 
-    def update_cell_neighborhood(self, cell):
+    @staticmethod
+    def update_cell_neighborhood(cell):
         cell.sense_neighborhood()
 
     def update_cells_state(self):
@@ -130,7 +133,8 @@ class CAHex:
         #     for cell in self.ca_grid.values():
         #         pool.apply_async(self.update_cell_state, args=(cell,))
 
-    def update_cell_state(self, cell):
+    @staticmethod
+    def update_cell_state(cell):
         cell.update()
 
     def get_cell_neighborhood(self, cell_x: int, cell_y: int, dist: int) -> Dict[Tuple[int, int], CellHex]:
