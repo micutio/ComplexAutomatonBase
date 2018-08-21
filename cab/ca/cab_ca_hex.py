@@ -1,13 +1,16 @@
 """
 This module contains the class for a CA with hexagonal cells in pointy top layout.
 """
+from cab.abm.cab_agent import CabAgent
+from typing import Dict, Tuple, Union
 
+from cab.cab_system import ComplexAutomaton
 from cab.ca.cab_cell import CellHex
 
 from multiprocessing import Pool
 
 import math
-import cab.util.cab_rng
+from cab.util.cab_rng import get_RNG
 
 __author__ = 'Michael Wagner'
 
@@ -21,20 +24,21 @@ class CAHex:
     - axial coordinates for storage
     """
 
-    def __init__(self, cab_sys, proto_cell=None):
+    def __init__(self, cab_sys: ComplexAutomaton, proto_cell: CellHex=None):
         """
         Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
         where the values are the cells with their q,r-coordinates as keys.
+        :returns the initialized CA.
         """
-        self.ca_grid = {}
-        self.sys = cab_sys
-        self.grid_height = self.sys.gc.GRID_HEIGHT
-        self.grid_width = self.sys.gc.GRID_WIDTH
-        self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
-        self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
-        self.cell_size = self.sys.gc.CELL_SIZE
-        self.use_borders = self.sys.gc.USE_CA_BORDERS
-        self.proto_cell = None
+        self.ca_grid: Dict[Tuple[int, int], CellHex] = dict()
+        self.sys: ComplexAutomaton = cab_sys
+        self.grid_height: int = self.sys.gc.GRID_HEIGHT
+        self.grid_width: int = self.sys.gc.GRID_WIDTH
+        self.height: int = int(self.grid_height / self.sys.gc.CELL_SIZE)
+        self.width: int = int(self.grid_width / self.sys.gc.CELL_SIZE)
+        self.cell_size: int = self.sys.gc.CELL_SIZE
+        self.use_borders: bool = self.sys.gc.USE_CA_BORDERS
+        self.proto_cell: CellHex = None
 
         if proto_cell is None:
             for j in range(0, self.height):
@@ -129,7 +133,7 @@ class CAHex:
     def update_cell_state(self, cell):
         cell.update()
 
-    def get_cell_neighborhood(self, cell_x, cell_y, dist):
+    def get_cell_neighborhood(self, cell_x: int, cell_y: int, dist: int) -> Dict[Tuple[int, int], CellHex]:
         """
         Creates a dictionary {'position': cell} where position is an (x,y) tuple
         for the given cell position to get an overview over the surrounding up to a given distance.
@@ -161,7 +165,8 @@ class CAHex:
                     neighborhood[new_x, y] = neigh_cell
         return neighborhood
 
-    def get_agent_neighborhood(self, agent_x, agent_y, dist):
+    def get_agent_neighborhood(self, agent_x: int , agent_y: int, dist: int) -> \
+            Dict[Tuple[int, int], Tuple[CellHex, Union[bool, CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
@@ -202,31 +207,31 @@ class CAHex:
         neighborhood = {key: value for key, value in neighborhood.items() if key not in other_agents}
         return neighborhood
 
-    def get_random_valid_position(self):
+    def get_random_valid_position(self) -> Tuple[int, int]:
         """
         Returns coordinates of a random cell position that is within the boundaries of the grid.
-        :return: Coordinates in hex form.
+        :returns Coordinates in hex form.
         """
         return get_RNG().choice(list(self.ca_grid.keys()))
 
     @staticmethod
-    def hex_round(q, r):
+    def hex_round(q: int, r: int) -> Tuple[int, int]:
         """
         Round a hex coordinate to the nearest hex coordinate.
         :param q: Hex coordinate q.
         :param r: Hex coordinate r.
-        :return: Rounded hex coordinate triple (x, y, z)
+        :returns Rounded hex coordinate triple (x, y, z)
         """
         return CAHex.cube_to_hex(*CAHex.cube_round(*CAHex.hex_to_cube(q, r)))
 
     @staticmethod
-    def cube_round(x, y, z):
+    def cube_round(x: float, y: float, z: float) -> Tuple[int, int, int]:
         """
         Round a cube coordinate to the nearest hex coordinate.
         :param x: Cube coordinate x.
         :param y: Cube coordinate y.
         :param z: Cube coordinate z.
-        :return: Rounded cube coordinate triple (x, y, z)
+        :returns Rounded cube coordinate triple (x, y, z)
         """
         rx = round(x)
         ry = round(y)
@@ -245,76 +250,76 @@ class CAHex:
         return rx, ry, rz
 
     @staticmethod
-    def cube_to_hex(x, y, z):
+    def cube_to_hex(x: int, y: int, z: int) -> Tuple[int, int]:
         """
         Convert cube coordinate triple to hex coordinate tuple.
         :param x: Cube coordinate x.
         :param y: Cube coordinate y.
         :param z: Cube coordinate z.
-        :return: Hex coordinate tuple (q, r)
+        :returns Hex coordinate tuple (q, r)
         """
         return x, y
 
     @staticmethod
-    def hex_to_cube(q, r):
+    def hex_to_cube(q: int, r: int) -> Tuple[int, int, int]:
         """
         Convert hex coordinate tuple into hex coordinate triple.
         :param q: Hex coordinate q.
         :param r: Hex coordinate r.
-        :return: Cube coordinate triple (x, y, z)
+        :returns Cube coordinate triple (x, y, z)
         """
         z = -q - r
         return q, r, z
 
     @staticmethod
-    def hex_distance(q1, r1, q2, r2):
+    def hex_distance(q1: int, r1: int, q2: int, r2: int) -> float:
         """
         Return hex distance between two cells. Equivalent to CAHex.cube_distance(cell_a, cell_b).
         :param q1: Q coordinate of first cell.
         :param r1: R coordinate of first cell.
         :param q2: Q coordinate of second cell.
         :param r2: R coordinate of second cell.
-        :return: Distance between first and second cell.
+        :returns Distance between first and second cell.
         """
         return (abs(q1 - q2) +
                 abs(q1 + r1 - q2 - r2) +
                 abs(r1 - r2)) / 2
 
     @staticmethod
-    def get_cell_in_direction(a, b):
+    def get_cell_in_direction(a: CellHex, b: CellHex) -> Tuple[int, int]:
         """
         Returns the first cell to go to when moving from cell a to cell b.
         :param a: Starting cell.
         :param b: Target cell.
-        :return: Neighboring cell of cell a that leads towards cell b.
+        :returns Neighboring cell of cell a that leads towards cell b.
         """
         n = CAHex.cube_distance(a, b)
         # Consider the special case where a and b are identical.
         if n == 0:
-            return b
+            return b.q, b.r
         else:
             _x, _y, _z = CAHex.cube_interpolate(a, b, 1.0/n * 1)
             _q, _r = CAHex.cube_to_hex(*CAHex.cube_round(_x, _y, _z))
         return _q, _r
 
     @staticmethod
-    def cube_distance(cell_a, cell_b):
+    def cube_distance(cell_a: CellHex, cell_b: CellHex) -> int:
         """
         Returns the cube distance between cell a and cell b. Equivalent to CAHex.hex_distance(q1, r1, q1, r1).
         :param cell_a: Starting cell.
         :param cell_b: Target cell.
-        :return: Cube distance between both cells as integer.
+        :returns Cube distance between both cells as integer.
         """
         return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y), abs(cell_a.z - cell_b.z))
 
     @staticmethod
-    def cube_interpolate(a, b, t):
+    def cube_interpolate(a: CellHex, b: CellHex, t: float) -> Tuple[float, float, float]:
         """
         Helper method for direction calculation.
         :param a: Starting cell.
         :param b: Target cell.
         :param t: Current step on the way between a and b.
-        :return: Current cell on the way between a and b.
+        :returns Current cell on the way between a and b.
         """
         x = CAHex.float_interpolate(a.x, b.x, t)
         y = CAHex.float_interpolate(a.y, b.y, t)
@@ -322,12 +327,12 @@ class CAHex:
         return x, y, z
 
     @staticmethod
-    def float_interpolate(a, b, t):
+    def float_interpolate(a: int, b: int, t: float) -> float:
         """
         Interpolate a coordinate between two cells and give step.
         :param a: Starting cell
         :param b: Target cell
         :param t: Current step on the way between a and b.
-        :return: Interpolated coordinate between cell a and cell b.
+        :returns Interpolated coordinate between cell a and cell b.
         """
         return a + (b - a) * t

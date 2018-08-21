@@ -2,31 +2,31 @@
 This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
-
-
+from cab.abm.cab_agent import CabAgent
+from typing import Dict, Tuple, Union, Any
 from cab.ca.cab_cell import CellRect
+from cab.cab_system import ComplexAutomaton
 
-
-__author__ = 'Michael Wagner'
+__author__: str = 'Michael Wagner'
 
 
 class CARect:
-    def __init__(self, cab_sys, proto_cell=None):
+    def __init__(self, cab_sys: ComplexAutomaton, proto_cell: CellRect=None):
         """
         Initializes and returns the cellular automaton.
         The CA is a dictionary and not a list of lists
-        :return: The initialized CA.
+        :returns The initialized CA.
         """
-        self.ca_grid = {}
-        self.sys = cab_sys
-        self.grid_height = self.sys.gc.GRID_HEIGHT
-        self.grid_width = self.sys.gc.GRID_WIDTH
-        self.height = int(self.grid_height / self.sys.gc.CELL_SIZE)
-        self.width = int(self.grid_width / self.sys.gc.CELL_SIZE)
-        self.cell_size = self.sys.gc.CELL_SIZE
-        self.use_moore_neighborhood = self.sys.gc.USE_MOORE_NEIGHBORHOOD
-        self.use_borders = self.sys.gc.USE_CA_BORDERS
-        self.proto_cell = None
+        self.ca_grid: Dict[Tuple[int, int], CellRect] = dict()
+        self.sys: ComplexAutomaton = cab_sys
+        self.grid_height: int = self.sys.gc.GRID_HEIGHT
+        self.grid_width: int = self.sys.gc.GRID_WIDTH
+        self.height: int = int(self.grid_height / self.sys.gc.CELL_SIZE)
+        self.width: int = int(self.grid_width / self.sys.gc.CELL_SIZE)
+        self.cell_size: int = self.sys.gc.CELL_SIZE
+        self.use_moore_neighborhood: bool = self.sys.gc.USE_MOORE_NEIGHBORHOOD
+        self.use_borders: bool = self.sys.gc.USE_CA_BORDERS
+        self.proto_cell: CellRect = None
 
         if proto_cell is None:
             for j in range(0, self.height):
@@ -73,7 +73,8 @@ class CARect:
         for cell in self.ca_grid.values():
             cell.update()
 
-    def get_agent_neighborhood(self, agent_x, agent_y, dist):
+    def get_agent_neighborhood(self, agent_x, agent_y, dist) ->\
+            Dict[Tuple[int, int], Tuple[CellRect, Union[bool, CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, [agents on that cell])}
         for the calling agent to get an overview over its immediate surrounding.
