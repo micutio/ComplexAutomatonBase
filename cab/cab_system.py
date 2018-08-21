@@ -56,8 +56,6 @@ class ComplexAutomaton:
                 self.ca = CARect(self)
             self.proto_cell = None
 
-        # TODO: Make this dependent on global constants
-        # PygameIO() | TkIO() | QtIO()
         if self.gc.gui == "TK":
             self.visualizer = TkIO(self.gc, self)
         elif self.gc.gui == "PyGame":
