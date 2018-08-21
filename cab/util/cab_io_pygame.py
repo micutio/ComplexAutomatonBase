@@ -7,9 +7,13 @@ import pygame.gfxdraw
 from pygame.locals import *
 import math
 
+from abm.cab_agent import CabAgent
+from ca.cab_cell import CACell
 from cab.util.cab_io_pygame_input import InputHandler
 
 from cab.util.cab_io_interface import IoInterface
+from cab_global_constants import GlobalConstants
+from cab_system import ComplexAutomaton
 
 __author__ = 'Michael Wagner'
 
@@ -19,10 +23,9 @@ class PygameIO(IoInterface):
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc, cab_core):
+    def __init__(self, gc: GlobalConstants, cab_core: ComplexAutomaton):
         """
-        Initializes the visualization and passes the surface on which to draw.
-        :param surface: Pygame surface object.
+        Initializes the visualization.
         """
         super().__init__(gc, cab_core)
         self.abm = cab_core.abm
@@ -67,7 +70,7 @@ class PygameIO(IoInterface):
             draw_agent(a)
         pygame.display.flip()
 
-    def draw_agent(self, agent):
+    def draw_agent(self, agent: CabAgent):
         """
         Simple exemplary visualization. Draw agent as a black circle
         """
@@ -84,14 +87,12 @@ class PygameIO(IoInterface):
             pygame.draw.circle(self.surface, agent.color, (x, y), radius, 0)
             pygame.gfxdraw.aacircle(self.surface, x, y, radius, (50, 100, 50))
 
-    def draw_cell(self, cell):
+    def draw_cell(self, cell: CACell):
         """
         Simple exemplary visualization. Draw cell in white.
         """
         if cell is None:
             pass
-        elif cell.rectangular:
-            pygame.draw.rect(self.surface, cell.color, (cell.x * cell.w, cell.y * cell.h, cell.w, cell.h), 0)
         else:
             if self.gc.DISPLAY_GRID:
                 pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (190, 190, 190))

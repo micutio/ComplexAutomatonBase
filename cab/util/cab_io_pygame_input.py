@@ -9,6 +9,7 @@ import math
 
 # Internal Simulation System Component imports.
 from cab.ca.cab_ca_hex import CAHex
+from cab_system import ComplexAutomaton
 
 __author__ = 'Michael Wagner'
 
@@ -17,7 +18,7 @@ class InputHandler:
     """
     This class incorporates all methods necessary for controlling the simulation.
     """
-    def __init__(self, cab_core):
+    def __init__(self, cab_core: ComplexAutomaton):
         self.mx = 0
         self.my = 0
         if cab_core is None:
@@ -64,7 +65,7 @@ class InputHandler:
         """
         pass
 
-    def custom_mouse_action(self, button):
+    def custom_mouse_action(self, button: int):
         """
         Processing Mouse action. Overwrite to extend!
         """
@@ -97,7 +98,7 @@ class InputHandler:
             # Trigger cell method.
             self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click()
 
-    def default_keyboard_action(self, active_key):
+    def default_keyboard_action(self, active_key: int):
         """
         Method to process all the keyboard inputs.
         This is not supposed to be overwritten.
@@ -117,7 +118,6 @@ class InputHandler:
         # Simulation Standard: 's' advances the simulation by one step.
         if active_key == pygame.K_s:
             self.core.step_simulation()
-            self.core.render_simulation()
             print(' < stepping simulation')
 
         # Simulation Standard: 'q' closes the simulation and visualization window.
@@ -125,7 +125,7 @@ class InputHandler:
             print(' < shutting down simulation')
             sys.exit()
 
-    def custom_keyboard_action(self, active_key):
+    def custom_keyboard_action(self, active_key: int):
         """
         Customizable Method to process keyboard inputs.
         Overwrite this method to add more inputs.
@@ -145,6 +145,6 @@ class InputHandler:
         """
         _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
         _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
-        cell_q, cell_r = CAHex.hex_round(_q, _r)
+        cell_q, cell_r = CAHex.hex_round(int(_q), int(_r))
         return cell_q, cell_r
 

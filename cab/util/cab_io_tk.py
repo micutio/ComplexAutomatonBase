@@ -11,6 +11,7 @@ from tkinter import Tk, Canvas
 from cab.ca.cab_ca_hex import CAHex
 
 from cab.util.cab_io_interface import IoInterface
+from cab_system import ComplexAutomaton
 
 __author__ = 'Michael Wagner'
 
@@ -20,7 +21,7 @@ class TkIO(IoInterface):
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc, cab_core):
+    def __init__(self, gc, cab_core: ComplexAutomaton):
         super().__init__(gc, cab_core)
         self.root = Tk()
         self.width = 0
@@ -62,7 +63,7 @@ class TkIO(IoInterface):
 
     def init_agent_shape_mapping(self):
         for agent in self.core.abm.agent_set:
-            if (not agent.x is None) and (not agent.y is None):
+            if (agent.x is not None) and (agent.y is not None):
                 radius = int(agent.size / 1.25)
 
                 horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
@@ -81,7 +82,7 @@ class TkIO(IoInterface):
                     col_o = self.get_color_string((0, 0, 0))
                 else:
                     col_o = self.get_color_string(agent.color)
-                circle = self.canvas.create_oval([x, y1, x2, y2], fill=col_f, outline=col_o)
+                circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
                 old_color = agent.color
                 self.agent_shape_mapping.append((circle, agent, old_color))
 
@@ -107,7 +108,7 @@ class TkIO(IoInterface):
         new_list = list()
         # Add agents that are new to the simulation.
         for agent in self.core.abm.new_agents:
-            if (not agent.x is None) and (not agent.y is None):
+            if (agent.x is not None) and (agent.y is not None):
                 radius = int(agent.size / 0.9)
 
                 horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
@@ -136,7 +137,7 @@ class TkIO(IoInterface):
                 col = self.get_color_string(agent.color)
                 self.canvas.itemconfig(oval, fill=col)
                 color = agent.color
-            if self.gc.RUN_SIMULATION and (agent.x != agent.prev_x or agent.y != agent.prev_y) :
+            if self.gc.RUN_SIMULATION and (agent.x != agent.prev_x or agent.y != agent.prev_y):
                 # Calculate position change
                 horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
                 offset1 = agent.y * (horiz / 2)
@@ -174,13 +175,14 @@ class TkIO(IoInterface):
         self.render_frame()
         self.root.mainloop()
 
-    def get_color_string(self, triple):
+    @staticmethod
+    def get_color_string(triple):
         return '#%02x%02x%02x' % triple
 
 
 class TkInputActions:
 
-    def __init__(self, ui):
+    def __init__(self, ui: TkIO):
         self.gc = ui.gc
         self.core = ui.core
         self.root = ui.root
@@ -290,5 +292,5 @@ class TkInputActions:
         """
         _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
         _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
-        cell_q, cell_r = CAHex.hex_round(_q, _r)
+        cell_q, cell_r = CAHex.hex_round(int(_q), int(_r))
         return cell_q, cell_r
