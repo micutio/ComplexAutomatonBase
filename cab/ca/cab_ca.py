@@ -4,10 +4,10 @@ Moore and von-Neumann neighborhoods are available.
 """
 from abc import ABCMeta
 
-from cab.abm.cab_agent import CabAgent
-from typing import Dict, Tuple, Union, Any
-from cab.ca.cab_cell import CellRect, CACell
-from cab.cab_system import ComplexAutomaton
+from abm.cab_agent import CabAgent
+from typing import Dict, Tuple, Union
+from ca.cab_cell import CACell
+from cab_system import ComplexAutomaton
 
 __author__: str = 'Michael Wagner'
 

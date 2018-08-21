@@ -1,12 +1,12 @@
 """
 This module contains the class for a CA with hexagonal cells in pointy top layout.
 """
-from cab.abm.cab_agent import CabAgent
+from abm.cab_agent import CabAgent
 from typing import Dict, Tuple, Union
 
-from cab.cab_system import ComplexAutomaton
-from cab.ca.cab_cell import CellHex
-from cab.ca.cab_ca import CabCA
+from cab_system import ComplexAutomaton
+from ca.cab_cell import CellHex
+from ca.cab_ca import CabCA
 
 from multiprocessing import Pool
 

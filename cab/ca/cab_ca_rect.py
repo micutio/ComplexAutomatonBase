@@ -2,11 +2,11 @@
 This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
-from cab.ca.cab_ca import CabCA
-from cab.abm.cab_agent import CabAgent
+from ca.cab_ca import CabCA
+from abm.cab_agent import CabAgent
 from typing import Dict, Tuple, Union
-from cab.ca.cab_cell import CellRect
-from cab.cab_system import ComplexAutomaton
+from ca.cab_cell import CellRect
+from cab_system import ComplexAutomaton
 
 __author__: str = 'Michael Wagner'
 
