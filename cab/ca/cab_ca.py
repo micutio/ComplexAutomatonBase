@@ -21,7 +21,6 @@ class CabCA(metaclass=ABCMeta):
         """
         self.proto_cell = proto_cell
         self.cab_sys = cab_sys
-        raise NotImplementedError("Method needs to be implemented")
 
     # Common Interface for all CA classes
 
