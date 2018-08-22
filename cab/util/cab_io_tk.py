@@ -11,7 +11,6 @@ from tkinter import Tk, Canvas
 from cab.ca.cab_ca_hex import CAHex
 
 from cab.util.cab_io_interface import IoInterface
-from cab_system import ComplexAutomaton
 
 __author__ = 'Michael Wagner'
 
@@ -21,7 +20,7 @@ class TkIO(IoInterface):
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc, cab_core: ComplexAutomaton):
+    def __init__(self, gc, cab_core):
         super().__init__(gc, cab_core)
         self.root = Tk()
         self.width = 0

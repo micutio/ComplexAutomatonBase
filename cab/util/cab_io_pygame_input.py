@@ -9,7 +9,6 @@ import math
 
 # Internal Simulation System Component imports.
 from cab.ca.cab_ca_hex import CAHex
-from cab_system import ComplexAutomaton
 
 __author__ = 'Michael Wagner'
 
@@ -18,7 +17,7 @@ class InputHandler:
     """
     This class incorporates all methods necessary for controlling the simulation.
     """
-    def __init__(self, cab_core: ComplexAutomaton):
+    def __init__(self, cab_core):
         self.mx = 0
         self.my = 0
         if cab_core is None:

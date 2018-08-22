@@ -2,18 +2,18 @@
 This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
-from abc import ABCMeta
 
-from abm.cab_agent import CabAgent
+from cab.abm.cab_agent import CabAgent
+from cab.ca.cab_cell import CACell
+
+from abc import ABCMeta
 from typing import Dict, Tuple, Union
-from ca.cab_cell import CACell
-from cab_system import ComplexAutomaton
 
 __author__: str = 'Michael Wagner'
 
 
 class CabCA(metaclass=ABCMeta):
-    def __init__(self, cab_sys: ComplexAutomaton, proto_cell: CACell=None):
+    def __init__(self, cab_sys, proto_cell: CACell=None):
         """
         Initializes and returns the cellular automaton.
         The CA is a dictionary and not a list of lists

@@ -7,13 +7,12 @@ import pygame.gfxdraw
 from pygame.locals import *
 import math
 
-from abm.cab_agent import CabAgent
-from ca.cab_cell import CACell
+from cab.abm.cab_agent import CabAgent
+from cab.ca.cab_cell import CACell
 from cab.util.cab_io_pygame_input import InputHandler
 
 from cab.util.cab_io_interface import IoInterface
-from cab_global_constants import GlobalConstants
-from cab_system import ComplexAutomaton
+from cab.cab_global_constants import GlobalConstants
 
 __author__ = 'Michael Wagner'
 
@@ -23,7 +22,7 @@ class PygameIO(IoInterface):
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc: GlobalConstants, cab_core: ComplexAutomaton):
+    def __init__(self, gc: GlobalConstants, cab_core):
         """
         Initializes the visualization.
         """
