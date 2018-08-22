@@ -7,6 +7,7 @@ except for the agent classes themselves.
 from cab.abm.cab_agent import CabAgent
 from cab.ca.cab_ca import CabCA
 from cab.cab_global_constants import GlobalConstants
+from cab.util.cab_logging import trace
 
 __author__ = 'Michael Wagner'
 
@@ -25,7 +26,7 @@ class ABM:
         self.new_agents = list()
         self.dead_agents = list()
         if proto_agent is not None:
-            trace('[ABM] have proto agent {0}'.format(kwargs['proto_agent']))
+            trace('[ABM] have proto agent {0}'.format(proto_agent))
             self.add_agent(proto_agent)
             self.schedule_new_agents()
         else:
@@ -109,7 +110,7 @@ class ABM:
             #         else:
             #             self.agent_locations[pos] = {agent}
         # self.new_agents = list()
-        trace("[ABM] agent {0} scheduled by the ABM".format(agent))
+            trace("[ABM] agent {0} scheduled by the ABM".format(agent))
 
     def remove_agent(self, agent: CabAgent):
         """

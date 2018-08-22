@@ -6,8 +6,11 @@ Controls console output and enables output at different logging levels.
 import sys
 
 from enum import Enum
+from functools import total_ordering
+from typing import Dict
 
 
+@total_ordering
 class LogLevel(Enum):
     TRACE = 0
     DEBUG = 1
@@ -16,35 +19,65 @@ class LogLevel(Enum):
     ERROR = 4
     FATAL = 5
 
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
 
-current_log_lvl: LogLevel = 2
+
+log_db: Dict[str, LogLevel] = dict()
+log_db['current'] = LogLevel.INFO
+
+
+def set_log_trace():
+    log_db['current'] = LogLevel.TRACE
+
+
+def set_log_debug():
+    log_db['current'] = LogLevel.DEBUG
+
+
+def set_log_info():
+    log_db['current'] = LogLevel.INFO
+
+
+def set_log_warning():
+    log_db['current'] = LogLevel.WARNING
+
+
+def set_log_error():
+    log_db['current'] = LogLevel.ERROR
+
+
+def set_log_fatal():
+    log_db['current'] = LogLevel.FATAL
 
 
 def trace(msg: str):
-    if current_log_lvl >= LogLevel.TRACE:
+    if log_db['current'] <= LogLevel.TRACE:
         print('[trace  ]' + msg)
 
 
 def debug(msg: str):
-    if current_log_lvl >= LogLevel.DEBUG:
+    if log_db['current'] <= LogLevel.DEBUG:
         print('[debug  ]' + msg)
 
 
 def info(msg: str):
-    if current_log_lvl >= LogLevel.INFO:
+    if log_db['current'] <= LogLevel.INFO:
         print('[info   ]' + msg)
 
 
 def warning(msg: str):
-    if current_log_lvl >= LogLevel.WARNING:
+    if log_db['current'] <= LogLevel.WARNING:
         print('[warning]' + msg, file=sys.stderr)
 
 
 def error(msg: str):
-    if current_log_lvl >= LogLevel.ERROR:
+    if log_db['current'] <= LogLevel.ERROR:
         print('[error  ]' + msg, file=sys.stderr)
 
 
 def fatal(msg: str):
-    if current_log_lvl >= LogLevel.FATAL:
+    if log_db['current'] <= LogLevel.FATAL:
         print('[fatal  ]' + msg, file=sys.stderr)
