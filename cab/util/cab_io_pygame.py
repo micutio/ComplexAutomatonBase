@@ -49,7 +49,6 @@ class PygameIO(IoInterface):
         trace("[PygameIO] initializing done")
 
     def render_frame(self):
-        trace("[PygameIO] start rendering frame")
         self.io_handler.process_input()
 
         if self.gc.RUN_SIMULATION:
@@ -93,6 +92,7 @@ class PygameIO(IoInterface):
         if cell is None:
             pass
         else:
+            pygame.gfxdraw.filled_polygon(self.surface, cell.get_corners(), cell.color)
             if self.gc.DISPLAY_GRID:
                 pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (190, 190, 190))
             else:
