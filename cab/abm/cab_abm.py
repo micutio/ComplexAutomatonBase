@@ -47,13 +47,18 @@ class ABM:
             if a.x != a.prev_x or a.y != a.prev_y:
                 self.update_agent_position(a)
 
-        self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
-        trace("[ABM] agent set = {0}".format(self.agent_set))
+        # self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
+        # trace("[ABM] agent set = {0}".format(self.agent_set))
         self.dead_agents = [agent for agent in self.agent_set if agent.dead]
-        trace("[ABM] dead agents = {0}".format(self.dead_agents))
+        # trace("[ABM] dead agents = {0}".format(self.dead_agents))
 
         for agent in self.dead_agents:
+            trace("[ABM] removing agent {0}".format(agent))
             self.remove_agent(agent)
+
+        self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
+        # trace("[ABM] agent set = {0}".format(self.agent_set))
+
         self.schedule_new_agents()
 
     def update_agent_position(self, agent: CabAgent):
