@@ -32,7 +32,7 @@ class CAHex(CabCA):
         """
         super().__init__(cab_sys, proto_cell)
         self.ca_grid: Dict[Tuple[int, int], CellHex] = dict()
-        self.sys: ComplexAutomaton = cab_sys
+        self.sys = cab_sys
         self.grid_height: int = self.sys.gc.GRID_HEIGHT
         self.grid_width: int = self.sys.gc.GRID_WIDTH
         self.height: int = int(self.grid_height / self.sys.gc.CELL_SIZE)
