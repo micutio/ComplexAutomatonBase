@@ -61,7 +61,6 @@ class TkIO(IoInterface):
             self.cell_shape_mapping.append((polygon, v, old_color))
 
     def init_agent_shape_mapping(self):
-        self.agent_shape_mapping = [(c, a, o) for (c, a, o) in self.agent_shape_mapping if a.alive]
         for agent in self.core.abm.agent_set:
             if (agent.x is not None) and (agent.y is not None):
                 radius = int(agent.size / 1.25)
@@ -127,11 +126,16 @@ class TkIO(IoInterface):
                 circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
                 old_color = agent.color
                 self.agent_shape_mapping.append((circle, agent, old_color))
- 
+
         # self.core.abm.new_agents = list()
 
-        # TODO: remove agents that are dead.
+        # Remove dead agents.
+        to_be_removed = [(o, a, c) for (o, a, c) in self.agent_shape_mapping if a.dead]
+        for (oval, agent, color) in to_be_removed:
+            self.canvas.delete(oval)
+
         # Update existing agents.
+        self.agent_shape_mapping = [(o, a, c) for (o, a, c) in self.agent_shape_mapping if not a.dead]
         for (oval, agent, color) in self.agent_shape_mapping:
             if agent.color != color:
                 col = self.get_color_string(agent.color)
