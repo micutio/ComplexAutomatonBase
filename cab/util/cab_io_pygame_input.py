@@ -78,24 +78,24 @@ class InputHandler:
             # Check if agents at this location and trigger their lmb click method.
             if (pos_x, pos_y) in self.core.abm.agent_locations:
                 if self.core.gc.ONE_AGENT_PER_CELL:
-                    self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click()
+                    self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click(self.core.abm, self.core.ca)
                 else:
                     for agent in self.core.abm.agent_locations[pos_x, pos_y]:
-                        agent.on_lmb_click()
+                        agent.on_lmb_click(self.core.abm, self.core.ca)
             # Trigger cell method.
-            self.core.ca.ca_grid[pos_x, pos_y].on_lmb_click()
+            self.core.ca.ca_grid[pos_x, pos_y].on_lmb_click(self.core.abm, self.core.ca)
 
         # Click on right mouse button.
         elif button == 3:
             # Check if agents at this location and trigger their rmb click method.
             if (pos_x, pos_y) in self.core.abm.agent_locations:
                 if self.core.gc.ONE_AGENT_PER_CELL:
-                    self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click()
+                    self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click(self.core.abm, self.core.ca)
                 else:
                     for agent in self.core.abm.agent_locations[pos_x, pos_y]:
-                        agent.on_lmb_click()
+                        agent.on_lmb_click(self.core.abm, self.core.ca)
             # Trigger cell method.
-            self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click()
+            self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click(self.core.abm, self.core.ca)
 
     def default_keyboard_action(self, active_key: int):
         """

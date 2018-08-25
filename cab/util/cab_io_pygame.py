@@ -13,6 +13,7 @@ from cab.util.cab_io_pygame_input import InputHandler
 
 from cab.util.cab_io_interface import IoInterface
 from cab.cab_global_constants import GlobalConstants
+from cab.util.cab_logging import *
 
 __author__ = 'Michael Wagner'
 
@@ -45,9 +46,14 @@ class PygameIO(IoInterface):
             offset_y = self.gc.CELL_SIZE * self.gc.DIM_Y
         self.surface = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
         pygame.display.set_caption('Complex Automaton Base')
+        trace("[PygameIO] initializing done")
 
     def render_frame(self):
+        trace("[PygameIO] start rendering frame")
         self.io_handler.process_input()
+
+        if self.gc.RUN_SIMULATION:
+            self.core.step_simulation()
 
         draw_cell = self.draw_cell
         for c in list(self.ca.ca_grid.values()):
@@ -59,15 +65,9 @@ class PygameIO(IoInterface):
 
 # TODO: Change render_simulation to fit the whole simulation loop inside.
     def render_simulation(self):
-        self.io_handler.process_input()
-
-        draw_cell = self.draw_cell
-        for c in list(self.ca.ca_grid.values()):
-            draw_cell(c)
-        draw_agent = self.draw_agent
-        for a in self.abm.agent_set:
-            draw_agent(a)
-        pygame.display.flip()
+        trace("[PygameIO] start rendering simulation")
+        while True:
+            self.render_frame()
 
     def draw_agent(self, agent: CabAgent):
         """
