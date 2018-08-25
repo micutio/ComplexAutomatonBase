@@ -61,6 +61,7 @@ class TkIO(IoInterface):
             self.cell_shape_mapping.append((polygon, v, old_color))
 
     def init_agent_shape_mapping(self):
+        self.agent_shape_mapping = [(c, a, o) for (c, a, o) in self.agent_shape_mapping if a.alive]
         for agent in self.core.abm.agent_set:
             if (agent.x is not None) and (agent.y is not None):
                 radius = int(agent.size / 1.25)
