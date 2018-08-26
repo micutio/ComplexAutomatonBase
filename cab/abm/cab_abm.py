@@ -121,7 +121,6 @@ class ABM:
         """
         Removes an agent from the system.
         """
-        print("removing agent {0}".format(agent))
         if self.gc.ONE_AGENT_PER_CELL:
             if self.agent_locations[agent.x, agent.y].a_id == agent.a_id:
                 del(self.agent_locations[agent.x, agent.y])
