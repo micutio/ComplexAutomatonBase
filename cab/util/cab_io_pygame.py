@@ -73,7 +73,7 @@ class PygameIO(IoInterface):
         Simple exemplary visualization. Draw agent as a black circle
         """
         if agent.x is not None and agent.y is not None and not agent.dead:
-            radius = int(agent.size / 1.5)
+            radius = int(agent.size / 1.25)
 
             horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
             offset = agent.y * (horiz / 2)

@@ -108,7 +108,7 @@ class TkIO(IoInterface):
         # Add agents that are new to the simulation.
         for agent in self.core.abm.new_agents:
             if (agent.x is not None) and (agent.y is not None):
-                radius = int(agent.size / 0.9)
+                radius = int(agent.size / 1.25)
 
                 horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
                 offset = agent.y * (horiz / 2)
