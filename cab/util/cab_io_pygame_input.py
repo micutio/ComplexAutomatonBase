@@ -9,6 +9,7 @@ import math
 
 # Internal Simulation System Component imports.
 from cab.ca.cab_ca_hex import CAHex
+from cab.util.cab_logging import *
 
 __author__ = 'Michael Wagner'
 
@@ -105,24 +106,32 @@ class InputHandler:
         if active_key == pygame.K_SPACE:
             self.core.gc.RUN_SIMULATION = not self.core.gc.RUN_SIMULATION
             if self.core.gc.RUN_SIMULATION:
-                print(' < simulation resumed')
+                info('[PyGameIO] < simulation resumed')
             else:
-                print(' < simulation paused')
+                info('[PyGameIO] < simulation paused')
 
         # Simulation Standard: 'r' resets the simulation.
         if active_key == pygame.K_r:
             self.core.reset_simulation()
-            print(' < simulation reset')
+            info('[PyGameIO] < simulation reset')
 
         # Simulation Standard: 's' advances the simulation by one step.
         if active_key == pygame.K_s:
             self.core.step_simulation()
-            print(' < stepping simulation')
+            info('[PyGameIO] < stepping simulation')
 
         # Simulation Standard: 'q' closes the simulation and visualization window.
         if active_key == pygame.K_q:
-            print(' < shutting down simulation')
+            info('[PyGameIO] < shutting down simulation')
             sys.exit()
+
+        # Simulation Standard: 'g' toggles grid outline of the cells.
+        if active_key == pygame.K_g:
+            self.core.gc.DISPLAY_GRID = not self.core.gc.DISPLAY_GRID
+            if self.core.gc.DISPLAY_GRID:
+                info('[PyGameIO] > showing grid')
+            else:
+                info('[PyGameIO] > hiding grid')
 
     def custom_keyboard_action(self, active_key: int):
         """
