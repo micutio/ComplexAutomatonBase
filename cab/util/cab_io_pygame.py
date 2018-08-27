@@ -94,7 +94,7 @@ class PygameIO(IoInterface):
         else:
             pygame.gfxdraw.filled_polygon(self.surface, cell.get_corners(), cell.color)
             if self.gc.DISPLAY_GRID:
-                pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (190, 190, 190))
+                pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (0, 0, 0))
             else:
                 pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), cell.color)
             return
