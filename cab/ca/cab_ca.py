@@ -48,7 +48,7 @@ class CabCA(metaclass=ABCMeta):
         raise NotImplementedError("Method needs to be implemented")
 
     def get_agent_neighborhood(self, agent_x, agent_y, dist) ->\
-            Dict[Tuple[int, int], Tuple[cab_ca.CACell, Union[bool, cab_agent.CabAgent]]]:
+            Dict[Tuple[int, int], Tuple[cab_cell.CACell, Union[bool, cab_agent.CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, [agents on that cell])}
         for the calling agent to get an overview over its immediate surrounding.

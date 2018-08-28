@@ -5,7 +5,6 @@ Moore and von-Neumann neighborhoods are available.
 
 from typing import Dict, Tuple, Union
 
-import cab.cab_system as cab_system
 import cab.ca.cab_ca as cab_ca
 import cab.abm.cab_agent as cab_agent
 import cab.ca.cab_cell as cab_cell
@@ -22,7 +21,7 @@ class CARect(cab_ca.CabCA):
         """
         super().__init__(cab_sys, proto_cell)
         self.ca_grid: Dict[Tuple[int, int], cab_cell.CellRect] = dict()
-        self.sys: cab_system.ComplexAutomaton = cab_sys
+        self.sys = cab_sys
         self.grid_height: int = self.sys.gc.GRID_HEIGHT
         self.grid_width: int = self.sys.gc.GRID_WIDTH
         self.height: int = int(self.grid_height / self.sys.gc.CELL_SIZE)

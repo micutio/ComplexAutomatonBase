@@ -10,6 +10,7 @@ import tkinter
 # Internal Simulation System component imports.
 import cab.ca.cab_ca_hex as cab_ca
 import cab.util.cab_io_interface as cab_io
+import cab.util.cab_logging as cab_log
 
 __author__ = 'Michael Wagner'
 
@@ -206,16 +207,16 @@ class TkInputActions:
     def key_space(self, event):
         self.core.gc.RUN_SIMULATION = not self.core.gc.RUN_SIMULATION
         if self.core.gc.RUN_SIMULATION:
-            info('[TkIO] < simulation resumed')
+            cab_log.info('[TkIO] < simulation resumed')
         else:
-            info('[TkIO] < simulation paused')
+            cab_log.info('[TkIO] < simulation paused')
 
     def key_s(self, event):
-        info('[TkIO] < stepping simulation')
+        cab_log.info('[TkIO] < stepping simulation')
         self.core.step_simulation()
 
     def key_r(self, event):
-        info('[TkIO] < simulation reset')
+        cab_log.info('[TkIO] < simulation reset')
         self.core.reset_simulation()
         self.ui.clear_cell_shape_mapping()
         self.ui.clear_agent_shape_mapping()
@@ -223,22 +224,22 @@ class TkInputActions:
         self.ui.init_agent_shape_mapping()
 
     def key_q(self, event):
-        info('[TkIO] < shutting down... Bye!')
+        cab_log.info('[TkIO] < shutting down... Bye!')
         sys.exit()
 
     def key_g(self, event):
         self.gc.DISPLAY_GRID = not self.gc.DISPLAY_GRID
         if self.gc.DISPLAY_GRID:
-            info('[TkIO] > showing grid')
+            cab_log.info('[TkIO] > showing grid')
         else:
-            info('[TkIO] > hiding grid')
+            cab_log.info('[TkIO] > hiding grid')
 
     def mouse_motion(self, event):
         self.mx = (event.x / self.core.gc.CELL_SIZE)
         self.my = (event.y / self.core.gc.CELL_SIZE)
 
     def mouse_left(self, event):
-        info('[TkIO] < left mouse button action')
+        cab_log.info('[TkIO] < left mouse button action')
         # Update current mouse coordinates
         self.mouse_motion(event)
         # Retrieve correct location coordinates.
@@ -247,23 +248,23 @@ class TkInputActions:
         else:
             pos_x, pos_y = self.get_mouse_rect_coords()
 
-        info('[TkIO] < triggering cell action')
+        cab_log.info('[TkIO] < triggering cell action')
         self.core.ca.ca_grid[pos_x, pos_y].on_lmb_click(self.core.abm, self.core.ca)
         if self.gc.ONE_AGENT_PER_CELL:
             if (pos_x, pos_y) in self.core.abm.agent_locations:
-                info('[TkIO] < triggering agent action')
+                cab_log.info('[TkIO] < triggering agent action')
                 self.core.abm.agent_locations[pos_x, pos_y].on_lmb_click(self.core.abm, self.core.ca)
         else:
             if (pos_x, pos_y) in self.core.abm.agent_locations:
-                info('[TkIO] < triggering agent action')
+                cab_log.info('[TkIO] < triggering agent action')
                 for agent in self.core.abm.agent_locations[pos_x, pos_y]:
                     agent.on_lmb_click(self.core.abm, self.core.ca)
 
     def mouse_wheel(self, event):
-        info('[TkIO] < mouse wheel action')
+        cab_log.info('[TkIO] < mouse wheel action')
 
     def mouse_right(self, event):
-        info('[TkIO] < right mouse button action')
+        cab_log.info('[TkIO] < right mouse button action')
         # Update current mouse coordinates.
         self.mouse_motion(event)
         # Retrieve correct location coordinates.
@@ -272,16 +273,16 @@ class TkInputActions:
         else:
             pos_x, pos_y = self.get_mouse_rect_coords()
 
-        info('[TkIO] < triggering cell action')
+        cab_log.info('[TkIO] < triggering cell action')
         self.core.ca.ca_grid[pos_x, pos_y].on_rmb_click(self.core.abm, self.core.ca)
         if self.gc.ONE_AGENT_PER_CELL:
             if (pos_x, pos_y) in self.core.abm.agent_locations:
-                # info('[TkIO] < triggering agent action')
+                # cab_log.info('[TkIO] < triggering agent action')
                 self.core.abm.agent_locations[pos_x, pos_y].on_rmb_click(self.core.abm, self.core.ca)
         else:
             if (pos_x, pos_y) in self.core.abm.agent_locations:
                 for agent in self.core.abm.agent_locations[pos_x, pos_y]:
-                    # info('[TkIO] < triggering agent action')
+                    # cab_log.info('[TkIO] < triggering agent action')
                     agent.on_rmb_click(self.core.abm, self.core.ca)
 
     def get_mouse_rect_coords(self):
