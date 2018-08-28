@@ -72,7 +72,7 @@ class PygameIO(cab_io.IoInterface):
         Simple exemplary visualization. Draw agent as a black circle
         """
         if agent.x is not None and agent.y is not None and not agent.dead:
-            radius = int(agent.size / 1.5)
+            radius = int(agent.size / 1.25)
 
             horiz = self.gc.CELL_SIZE * 2 * (math.sqrt(3) / 2)
             offset = agent.y * (horiz / 2)
@@ -93,7 +93,7 @@ class PygameIO(cab_io.IoInterface):
         else:
             pygame.gfxdraw.filled_polygon(self.surface, cell.get_corners(), cell.color)
             if self.gc.DISPLAY_GRID:
-                pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (190, 190, 190))
+                pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), (0, 0, 0))
             else:
                 pygame.gfxdraw.aapolygon(self.surface, cell.get_corners(), cell.color)
             return
