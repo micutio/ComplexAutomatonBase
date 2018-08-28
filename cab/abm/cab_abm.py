@@ -4,17 +4,17 @@ This module contains all classes associated with the agent based system,
 except for the agent classes themselves.
 """
 
-from cab.abm.cab_agent import CabAgent
-from cab.ca.cab_ca import CabCA
-from cab.cab_global_constants import GlobalConstants
-from cab.util.cab_logging import trace
+import cab.abm.cab_agent as cab_agent
+import cab.ca.cab_ca as cab_ca
+import cab.cab_global_constants as cab_gc
+import cab.util.cab_logging as cab_log
 
 __author__ = 'Michael Wagner'
 
 
 # TODO: include choice between cells inhabitable by only one or multiple agents at once.
 class ABM:
-    def __init__(self, gc: GlobalConstants, proto_agent: CabAgent=None):
+    def __init__(self, gc: cab_gc.GlobalConstants, proto_agent: cab_agent.CabAgent=None):
         """
         Initializes an abm with the given number of agents and returns it.
         :param gc: Global Constants, Parameters for the ABM.
@@ -26,13 +26,13 @@ class ABM:
         self.new_agents = list()
         self.dead_agents = list()
         if proto_agent is not None:
-            trace('[ABM] have proto agent {0}'.format(proto_agent))
+            cab_log.trace('[ABM] have proto agent {0}'.format(proto_agent))
             self.add_agent(proto_agent)
             self.schedule_new_agents()
         else:
-            trace('[ABM] have NO proto agent')
+            cab_log.trace('[ABM] have NO proto agent')
 
-    def cycle_system(self, ca: CabCA):
+    def cycle_system(self, ca: cab_ca.CabCA):
         """
         Cycles through all agents and has them perceive and act in the world
         """
@@ -48,38 +48,38 @@ class ABM:
                 self.update_agent_position(a)
 
         # self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
-        # trace("[ABM] agent set = {0}".format(self.agent_set))
+        # cab_log.trace("[ABM] agent set = {0}".format(self.agent_set))
         self.dead_agents = [agent for agent in self.agent_set if agent.dead]
-        # trace("[ABM] dead agents = {0}".format(self.dead_agents))
+        # cab_log.trace("[ABM] dead agents = {0}".format(self.dead_agents))
 
         for agent in self.dead_agents:
-            trace("[ABM] removing agent {0}".format(agent))
+            cab_log.trace("[ABM] removing agent {0}".format(agent))
             self.remove_agent(agent)
 
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
-        # trace("[ABM] agent set = {0}".format(self.agent_set))
+        # cab_log.trace("[ABM] agent set = {0}".format(self.agent_set))
 
         self.schedule_new_agents()
 
-    def update_agent_position(self, agent: CabAgent):
+    def update_agent_position(self, agent: cab_agent.CabAgent):
         """
         Update all agent positions in the location map.
         """
         if self.gc.ONE_AGENT_PER_CELL:
             self.agent_locations.pop((agent.prev_x, agent.prev_y))
             self.agent_locations[agent.x, agent.y] = agent
-            trace("[ABM] moving agent from = {0}, {1}".format(agent.prev_x, agent.prev_y))
+            cab_log.trace("[ABM] moving agent from = {0}, {1}".format(agent.prev_x, agent.prev_y))
         else:
             self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
             if not self.agent_locations[agent.prev_x, agent.prev_y]:
-                trace("[ABM] position {0}, {1} empty, removing from location map".format(agent.prev_x, agent.prev_y))
+                cab_log.trace("[ABM] position {0}, {1} empty, removing from location map".format(agent.prev_x, agent.prev_y))
                 self.agent_locations.pop((agent.prev_x, agent.prev_y))
             try:
                 self.agent_locations[agent.x, agent.y].add(agent)
             except KeyError:
                 self.agent_locations[agent.x, agent.y] = {agent}  # set([agent])
 
-    def add_agent(self, agent: CabAgent):
+    def add_agent(self, agent: cab_agent.CabAgent):
         """
         Add an agent to the system.
         """
@@ -95,7 +95,7 @@ class ABM:
                     self.agent_locations[pos].add(agent)
                 else:
                     self.agent_locations[pos] = {agent}
-        trace("[ABM] agent added to position {0}, {1}".format(agent.x, agent.y))
+        cab_log.trace("[ABM] agent added to position {0}, {1}".format(agent.x, agent.y))
 
     def schedule_new_agents(self):
         """
@@ -115,9 +115,9 @@ class ABM:
             #         else:
             #             self.agent_locations[pos] = {agent}
         # self.new_agents = list()
-            trace("[ABM] agent {0} scheduled by the ABM".format(agent))
+            cab_log.trace("[ABM] agent {0} scheduled by the ABM".format(agent))
 
-    def remove_agent(self, agent: CabAgent):
+    def remove_agent(self, agent: cab_agent.CabAgent):
         """
         Removes an agent from the system.
         """

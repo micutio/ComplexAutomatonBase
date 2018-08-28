@@ -1,3 +1,10 @@
+"""
+Statistics module that is supposed to allow printing pre-defined
+or customized stats about the simulation in matplotlib graphs.
+TODO: Finish implementation. This is still old outdated code that should serve as inspiration only.
+"""
+
+
 import matplotlib.pyplot as plt
 plt.xkcd()
 

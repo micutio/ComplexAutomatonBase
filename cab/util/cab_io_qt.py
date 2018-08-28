@@ -2,6 +2,8 @@
 This module contains a CAB io implementation in TkInter.
 """
 
+# TODO: Finish or delete
+
 # External library imports.
 import math
 import sys

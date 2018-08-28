@@ -3,8 +3,8 @@ This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
 
-from cab.abm.cab_agent import CabAgent
-from cab.ca.cab_cell import CACell
+import cab.abm.cab_agent as cab_agent
+import cab.ca.cab_cell as cab_cell
 
 from abc import ABCMeta
 from typing import Dict, Tuple, Union
@@ -13,7 +13,7 @@ __author__: str = 'Michael Wagner'
 
 
 class CabCA(metaclass=ABCMeta):
-    def __init__(self, cab_sys, proto_cell: CACell=None):
+    def __init__(self, cab_sys, proto_cell: cab_cell.CACell=None):
         """
         Initializes and returns the cellular automaton.
         The CA is a dictionary and not a list of lists
@@ -48,7 +48,7 @@ class CabCA(metaclass=ABCMeta):
         raise NotImplementedError("Method needs to be implemented")
 
     def get_agent_neighborhood(self, agent_x, agent_y, dist) ->\
-            Dict[Tuple[int, int], Tuple[CACell, Union[bool, CabAgent]]]:
+            Dict[Tuple[int, int], Tuple[cab_ca.CACell, Union[bool, cab_agent.CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, [agents on that cell])}
         for the calling agent to get an overview over its immediate surrounding.

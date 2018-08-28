@@ -5,24 +5,23 @@ This module contains a CAB io implementation in TkInter.
 # External library imports.
 import math
 import sys
-from tkinter import Tk, Canvas
+import tkinter
 
 # Internal Simulation System component imports.
-from cab.ca.cab_ca_hex import CAHex
-
-from cab.util.cab_io_interface import IoInterface
+import cab.ca.cab_ca_hex as cab_ca
+import cab.util.cab_io_interface as cab_io
 
 __author__ = 'Michael Wagner'
 
 
-class TkIO(IoInterface):
+class TkIO(cab_io.IoInterface):
     """
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
     def __init__(self, gc, cab_core):
         super().__init__(gc, cab_core)
-        self.root = Tk()
+        self.root = tkinter.Tk()
         self.width = 0
         self.height = 0
         self.root.title("Complex Automaton")
@@ -48,7 +47,7 @@ class TkIO(IoInterface):
             self.height = self.gc.CELL_SIZE * self.gc.DIM_Y
 
         col = '#%02x%02x%02x' % self.gc.DEFAULT_CELL_COLOR
-        self.canvas = Canvas(self.root, width=self.width, height=self.height, bg=col)
+        self.canvas = tkinter.Canvas(self.root, width=self.width, height=self.height, bg=col)
         self.canvas.pack()
 
     def init_cell_shape_mapping(self):
@@ -296,5 +295,5 @@ class TkInputActions:
         """
         _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
         _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
-        cell_q, cell_r = CAHex.hex_round(int(_q), int(_r))
+        cell_q, cell_r = cab_ca.CAHex.hex_round(int(_q), int(_r))
         return cell_q, cell_r

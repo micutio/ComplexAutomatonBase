@@ -4,26 +4,25 @@ This module contains a CAB io implementation in PyGame.
 
 import pygame
 import pygame.gfxdraw
-from pygame.locals import *
+import pygame.locals
 import math
 
-from cab.abm.cab_agent import CabAgent
-from cab.ca.cab_cell import CACell
-from cab.util.cab_io_pygame_input import InputHandler
-
-from cab.util.cab_io_interface import IoInterface
-from cab.cab_global_constants import GlobalConstants
-from cab.util.cab_logging import *
+import cab.abm.cab_agent as cab_agent
+import cab.ca.cab_cell as cab_cell
+import cab.util.cab_io_pygame_input as cab_pygame_io
+import cab.util.cab_io_interface as cab_io
+import cab.cab_global_constants as cab_gc
+import cab.util.cab_logging as cab_log
 
 __author__ = 'Michael Wagner'
 
 
-class PygameIO(IoInterface):
+class PygameIO(cab_io.IoInterface):
     """
     This class incorporates all methods necessary for visualizing the simulation.
     """
 
-    def __init__(self, gc: GlobalConstants, cab_core):
+    def __init__(self, gc: cab_gc.GlobalConstants, cab_core):
         """
         Initializes the visualization.
         """
@@ -31,7 +30,7 @@ class PygameIO(IoInterface):
         self.abm = cab_core.abm
         self.ca = cab_core.ca
         self.surface = None
-        self.io_handler = InputHandler(cab_core)
+        self.io_handler = cab_pygame_io.InputHandler(cab_core)
 
         # Initialize UI components.
         pygame.init()
@@ -44,9 +43,9 @@ class PygameIO(IoInterface):
         else:
             offset_x = self.gc.CELL_SIZE * self.gc.DIM_X
             offset_y = self.gc.CELL_SIZE * self.gc.DIM_Y
-        self.surface = pygame.display.set_mode((offset_x, offset_y), HWSURFACE | DOUBLEBUF, 32)
+        self.surface = pygame.display.set_mode((offset_x, offset_y), pygame.locals.HWSURFACE | pygame.locals.DOUBLEBUF, 32)
         pygame.display.set_caption('Complex Automaton Base')
-        trace("[PygameIO] initializing done")
+        cab_log.trace("[PygameIO] initializing done")
 
     def render_frame(self):
         self.io_handler.process_input()
@@ -64,11 +63,11 @@ class PygameIO(IoInterface):
 
 # TODO: Change render_simulation to fit the whole simulation loop inside.
     def render_simulation(self):
-        trace("[PygameIO] start rendering simulation")
+        cab_log.trace("[PygameIO] start rendering simulation")
         while True:
             self.render_frame()
 
-    def draw_agent(self, agent: CabAgent):
+    def draw_agent(self, agent: cab_agent.CabAgent):
         """
         Simple exemplary visualization. Draw agent as a black circle
         """
@@ -85,7 +84,7 @@ class PygameIO(IoInterface):
             pygame.draw.circle(self.surface, agent.color, (x, y), radius, 0)
             pygame.gfxdraw.aacircle(self.surface, x, y, radius, (50, 100, 50))
 
-    def draw_cell(self, cell: CACell):
+    def draw_cell(self, cell: cab_cell.CACell):
         """
         Simple exemplary visualization. Draw cell in white.
         """

@@ -3,8 +3,8 @@ This module contains all classes associated with the CA cells.
 """
 
 # External library imports
-import math
 from abc import ABCMeta, abstractmethod
+import math
 
 
 __author__ = 'Michael Wagner'

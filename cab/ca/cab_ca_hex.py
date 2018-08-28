@@ -1,21 +1,21 @@
 """
 This module contains the class for a CA with hexagonal cells in pointy top layout.
 """
+
 from typing import Dict, Tuple, Union
 
-from cab.abm.cab_agent import CabAgent
-from cab.ca.cab_cell import CellHex
-from cab.ca.cab_ca import CabCA
-
-from multiprocessing import Pool
-
 import math
-from cab.util.cab_rng import get_RNG
+import multiprocessing as mp
+
+import cab.abm.cab_agent as cab_agent
+import cab.ca.cab_cell as cab_cell
+import cab.ca.cab_ca as cab_ca
+import cab.util.cab_rng as cab_rng
 
 __author__ = 'Michael Wagner'
 
 
-class CAHex(CabCA):
+class CAHex(cab_ca.CabCA):
     """
     For reference go to "http://www.redblobgames.com/grids/hexagons/"
     Hex CA parameters:
@@ -24,14 +24,14 @@ class CAHex(CabCA):
     - axial coordinates for storage
     """
 
-    def __init__(self, cab_sys, proto_cell: CellHex = None):
+    def __init__(self, cab_sys, proto_cell: cab_cell.CellHex = None):
         """
         Initializes the cellular automaton. The grid has the form of a dictionary {(q, r) : cell}
         where the values are the cells with their q,r-coordinates as keys.
         :returns the initialized CA.
         """
         super().__init__(cab_sys, proto_cell)
-        self.ca_grid: Dict[Tuple[int, int], CellHex] = dict()
+        self.ca_grid: Dict[Tuple[int, int], cab_cell.CellHex] = dict()
         self.sys = cab_sys
         self.grid_height: int = self.sys.gc.GRID_HEIGHT
         self.grid_width: int = self.sys.gc.GRID_WIDTH
@@ -39,14 +39,14 @@ class CAHex(CabCA):
         self.width: int = int(self.grid_width / self.sys.gc.CELL_SIZE)
         self.cell_size: int = self.sys.gc.CELL_SIZE
         self.use_borders: bool = self.sys.gc.USE_CA_BORDERS
-        self.proto_cell: CellHex = None
+        self.proto_cell: cab_cell.CellHex = None
 
         if proto_cell is None:
             for j in range(0, self.height):
                 for i in range(0, self.width):
                     # self.ca_grid[i, j] = CellHex(i, j, gc.CELL_SIZE, gc)
                     q = i - math.floor(j / 2)
-                    self.ca_grid[q, j] = CellHex(q, j, self.sys.gc)
+                    self.ca_grid[q, j] = cab_cell.CellHex(q, j, self.sys.gc)
                     # print('x={0}, y={1}'.format(q, j))
                     if self.sys.gc.USE_CA_BORDERS and (i == 0 or j == 0 or i == (self.width - 1) or j == (self.height - 1)):
                         self.ca_grid[q, j].is_border = True
@@ -111,7 +111,7 @@ class CAHex(CabCA):
         Call the neighborhood-update method of all cells in the cellular automaton.
         """
         # print("CAHex::update_cells_from_neighborhood: creating pool")
-        # with Pool(processes=4) as pool:
+        # with mp.Pool(processes=4) as pool:
         #     for cell in self.ca_grid.values():
         #         pool.apply_async(self.update_cell_neighborhood, args=(cell,))
         for cell in self.ca_grid.values():
@@ -128,7 +128,7 @@ class CAHex(CabCA):
         for cell in self.ca_grid.values():
             cell.update()
         # print("CAHex::update_cells_state: creating pool")
-        # with Pool(processes=4) as pool:
+        # with mp.Pool(processes=4) as pool:
         #     for cell in self.ca_grid.values():
         #         pool.apply_async(self.update_cell_state, args=(cell,))
 
@@ -136,7 +136,7 @@ class CAHex(CabCA):
     def update_cell_state(cell):
         cell.update()
 
-    def get_cell_neighborhood(self, cell_x: int, cell_y: int, dist: int) -> Dict[Tuple[int, int], CellHex]:
+    def get_cell_neighborhood(self, cell_x: int, cell_y: int, dist: int) -> Dict[Tuple[int, int], cab_cell.CellHex]:
         """
         Creates a dictionary {'position': cell} where position is an (x,y) tuple
         for the given cell position to get an overview over the surrounding up to a given distance.
@@ -169,7 +169,7 @@ class CAHex(CabCA):
         return neighborhood
 
     def get_agent_neighborhood(self, agent_x: int , agent_y: int, dist: int) -> \
-            Dict[Tuple[int, int], Tuple[CellHex, Union[bool, CabAgent]]]:
+            Dict[Tuple[int, int], Tuple[cab_cell.CellHex, Union[bool, cab_agent.CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
         for the calling agent to get an overview over its immediate surrounding.
@@ -215,7 +215,7 @@ class CAHex(CabCA):
         Returns coordinates of a random cell position that is within the boundaries of the grid.
         :returns Coordinates in hex form.
         """
-        return get_RNG().choice(list(self.ca_grid.keys()))
+        return cab_rng.get_RNG().choice(list(self.ca_grid.keys()))
 
     @staticmethod
     def hex_round(q: int, r: int) -> Tuple[int, int]:
@@ -289,7 +289,7 @@ class CAHex(CabCA):
                 abs(r1 - r2)) / 2
 
     @staticmethod
-    def get_cell_in_direction(a: CellHex, b: CellHex) -> Tuple[int, int]:
+    def get_cell_in_direction(a: cab_cell.CellHex, b: cab_cell.CellHex) -> Tuple[int, int]:
         """
         Returns the first cell to go to when moving from cell a to cell b.
         :param a: Starting cell.
@@ -306,7 +306,7 @@ class CAHex(CabCA):
         return _q, _r
 
     @staticmethod
-    def cube_distance(cell_a: CellHex, cell_b: CellHex) -> int:
+    def cube_distance(cell_a: cab_cell.CellHex, cell_b: cab_cell.CellHex) -> int:
         """
         Returns the cube distance between cell a and cell b. Equivalent to CAHex.hex_distance(q1, r1, q1, r1).
         :param cell_a: Starting cell.
@@ -316,7 +316,7 @@ class CAHex(CabCA):
         return max(abs(cell_a.x - cell_b.x), abs(cell_a.y - cell_b.y), abs(cell_a.z - cell_b.z))
 
     @staticmethod
-    def cube_interpolate(a: CellHex, b: CellHex, t: float) -> Tuple[float, float, float]:
+    def cube_interpolate(a: cab_cell.CellHex, b: cab_cell.CellHex, t: float) -> Tuple[float, float, float]:
         """
         Helper method for direction calculation.
         :param a: Starting cell.

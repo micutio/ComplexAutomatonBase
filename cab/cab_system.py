@@ -4,15 +4,15 @@ Contains the automaton itself.
 """
 
 
-from cab.cab_global_constants import GlobalConstants
-from cab.abm.cab_abm import ABM
-from cab.ca.cab_ca_rect import CARect
-from cab.ca.cab_ca_hex import CAHex
+import cab.cab_global_constants as cab_gc
+import cab.abm.cab_abm as cab_abm
+import cab.ca.cab_ca_rect as ca_rect
+import cab.ca.cab_ca_hex as ca_hex
 
-from cab.util.cab_io_tk import TkIO
-from cab.util.cab_io_pygame import PygameIO
-from cab.util.cab_rng import seed_RNG
-from cab.util.cab_logging import *
+import cab.util.cab_io_tk as cab_io_tk
+import cab.util.cab_io_pygame as cab_io_pg
+import cab.util.cab_rng as cab_rng
+import cab.util.cab_logging as cab_log
 
 __author__ = 'Michael Wagner'
 
@@ -22,47 +22,47 @@ class ComplexAutomaton:
     The main class of Sugarscape. This controls everything.
     """
 
-    def __init__(self, global_constants: GlobalConstants, **kwargs):
+    def __init__(self, global_constants: cab_gc.GlobalConstants, **kwargs):
         """
         Standard initializer.
         :param global_constants: All constants or important variables that control the simulation.
         :param kwargs**: cell prototype, agent prototype, visualizer prototype and IO handler prototype.
         """
-        self.gc: GlobalConstants = global_constants
-        seed_RNG(self.gc.RNG_SEED)
+        self.gc: cab_gc.GlobalConstants = global_constants
+        cab_rng.seed_RNG(self.gc.RNG_SEED)
 
         if 'proto_agent' in kwargs:
-            trace('[ComplexAutomaton] have proto agent {0}'.format(kwargs['proto_agent']))
-            self.abm = ABM(self.gc, proto_agent=kwargs['proto_agent'])
+            cab_log.trace('[ComplexAutomaton] have proto agent {0}'.format(kwargs['proto_agent']))
+            self.abm = cab_abm.ABM(self.gc, proto_agent=kwargs['proto_agent'])
             self.proto_agent = kwargs['proto_agent']
         else:
-            self.abm = ABM(self.gc)
+            self.abm = cab_abm.ABM(self.gc)
             self.proto_agent = None
 
         if 'proto_cell' in kwargs:
-            trace('[ComplexAutomaton] have proto agent {0}'.format(kwargs['proto_agent']))
+            cab_log.trace('[ComplexAutomaton] have proto agent {0}'.format(kwargs['proto_agent']))
             if self.gc.USE_HEX_CA:
-                trace('[ComplexAutomaton] initializing hexagonal CA')
-                self.ca = CAHex(self, proto_cell=kwargs['proto_cell'])
+                cab_log.trace('[ComplexAutomaton] initializing hexagonal CA')
+                self.ca = ca_hex.CAHex(self, proto_cell=kwargs['proto_cell'])
             else:
-                trace('[ComplexAutomaton] initializing rectangular CA')
-                self.ca = CARect(self, proto_cell=kwargs['proto_cell'])
+                cab_log.trace('[ComplexAutomaton] initializing rectangular CA')
+                self.ca = ca_rect.CARect(self, proto_cell=kwargs['proto_cell'])
             self.proto_cell = kwargs['proto_cell']
         else:
             if self.gc.USE_HEX_CA:
-                trace('[ComplexAutomaton] initializing hexagonal CA')
-                self.ca = CAHex(self)
+                cab_log.trace('[ComplexAutomaton] initializing hexagonal CA')
+                self.ca = ca_hex.CAHex(self)
             else:
-                trace('[ComplexAutomaton] initializing rectangular CA')
-                self.ca = CARect(self)
+                cab_log.trace('[ComplexAutomaton] initializing rectangular CA')
+                self.ca = ca_rect.CARect(self)
             self.proto_cell = None
 
         if self.gc.gui == "TK":
-            trace('[ComplexAutomaton] initializing Tk IO')
-            self.visualizer = TkIO(self.gc, self)
+            cab_log.trace('[ComplexAutomaton] initializing Tk IO')
+            self.visualizer = cab_io_tk.TkIO(self.gc, self)
         elif self.gc.gui == "PyGame":
-            trace('[ComplexAutomaton] initializing Pygame IO')
-            self.visualizer = PygameIO(self.gc, self)
+            cab_log.trace('[ComplexAutomaton] initializing Pygame IO')
+            self.visualizer = cab_io_pg.PygameIO(self.gc, self)
         self.display_info()
 
     def display_info(self):
@@ -74,7 +74,7 @@ class ComplexAutomaton:
               "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
-        info('resetting simulation')
+        cab_log.info('resetting simulation')
         self.abm.__init__(self.gc, proto_agent=self.proto_agent)
         self.ca.__init__(self, proto_cell=self.proto_cell)
         self.gc.TIME_STEP = 0

@@ -8,7 +8,7 @@ import sys
 import math
 
 # Internal Simulation System Component imports.
-from cab.ca.cab_ca_hex import CAHex
+import cab.ca.cab_ca_hex as cab_ca_hex
 
 __author__ = 'Michael Wagner'
 
@@ -144,6 +144,6 @@ class InputHandler:
         """
         _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
         _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
-        cell_q, cell_r = CAHex.hex_round(int(_q), int(_r))
+        cell_q, cell_r = cab_ca_hex.CAHex.hex_round(int(_q), int(_r))
         return cell_q, cell_r
 
