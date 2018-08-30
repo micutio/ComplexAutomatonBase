@@ -11,6 +11,7 @@ import cab.abm.cab_agent as cab_agent
 import cab.ca.cab_cell as cab_cell
 import cab.ca.cab_ca as cab_ca
 import cab.util.cab_rng as cab_rng
+import cab.util.cab_stats as cab_stats
 
 __author__ = 'Michael Wagner'
 
@@ -106,6 +107,7 @@ class CAHex(cab_ca.CabCA):
         self.update_cells_from_neighborhood()
         self.update_cells_state()
 
+    @cab_stats.timedmethod
     def update_cells_from_neighborhood(self):
         """
         Call the neighborhood-update method of all cells in the cellular automaton.
@@ -121,6 +123,7 @@ class CAHex(cab_ca.CabCA):
     def update_cell_neighborhood(cell):
         cell.sense_neighborhood()
 
+    @cab_stats.timedmethod
     def update_cells_state(self):
         """
         Calls the the state-update method of all cells in the cellular automaton.

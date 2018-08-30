@@ -8,6 +8,7 @@ import cab.abm.cab_agent as cab_agent
 import cab.ca.cab_ca as cab_ca
 import cab.cab_global_constants as cab_gc
 import cab.util.cab_logging as cab_log
+import cab.util.cab_stats as cab_stats
 
 __author__ = 'Michael Wagner'
 
@@ -32,6 +33,7 @@ class ABM:
         else:
             cab_log.trace('[ABM] have NO proto agent')
 
+    @cab_stats.timedmethod
     def cycle_system(self, ca: cab_ca.CabCA):
         """
         Cycles through all agents and has them perceive and act in the world
