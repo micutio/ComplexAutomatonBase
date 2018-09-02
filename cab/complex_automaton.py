@@ -40,7 +40,7 @@ class ComplexAutomaton:
             self.proto_agent = None
 
         if 'proto_cell' in kwargs:
-            cab_log.trace('[ComplexAutomaton] have proto agent {0}'.format(kwargs['proto_agent']))
+            cab_log.trace('[ComplexAutomaton] have proto cell {0}'.format(kwargs['proto_cell']))
             if self.gc.USE_HEX_CA:
                 cab_log.trace('[ComplexAutomaton] initializing hexagonal CA')
                 self.ca = ca_hex.CAHex(self, proto_cell=kwargs['proto_cell'])
