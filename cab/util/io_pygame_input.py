@@ -8,8 +8,8 @@ import sys
 import math
 
 # Internal Simulation System Component imports.
-import cab.ca.cab_ca_hex as cab_ca_hex
-import cab.util.cab_logging as cab_log
+import cab.ca.ca_hex as cab_ca_hex
+import cab.util.logging as cab_log
 
 __author__ = 'Michael Wagner'
 

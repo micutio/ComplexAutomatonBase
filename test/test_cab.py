@@ -1,6 +1,6 @@
 # CAB libraries
-from cab.cab_system import ComplexAutomaton
-from cab.cab_global_constants import GlobalConstants
+from cab.complex_automaton import ComplexAutomaton
+from cab.global_constants import GlobalConstants
 
 # External libraries
 import unittest

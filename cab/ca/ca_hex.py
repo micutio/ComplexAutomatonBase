@@ -7,11 +7,11 @@ from typing import Dict, Tuple, Union
 import math
 import multiprocessing as mp
 
-import cab.abm.cab_agent as cab_agent
-import cab.ca.cab_cell as cab_cell
-import cab.ca.cab_ca as cab_ca
-import cab.util.cab_rng as cab_rng
-import cab.util.cab_stats as cab_stats
+import cab.abm.agent as cab_agent
+import cab.ca.cell as cab_cell
+import cab.ca.ca as cab_ca
+import cab.util.rng as cab_rng
+import cab.util.stats as cab_stats
 
 __author__ = 'Michael Wagner'
 

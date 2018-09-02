@@ -10,8 +10,8 @@ import sys
 
 # Internal Simulation System component imports.
 from PyQt5.uic.properties import QtGui
-from cab.ca.cab_ca_hex import CAHex
-from util.cab_io_interface import IoInterface
+from cab.ca.ca_hex import CAHex
+from util.io_interface import IoInterface
 
 __author__ = 'Michael Wagner'
 

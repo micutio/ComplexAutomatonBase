@@ -3,8 +3,8 @@ This module contains the class for a CA with rectangular cells.
 Moore and von-Neumann neighborhoods are available.
 """
 
-import cab.abm.cab_agent as cab_agent
-import cab.ca.cab_cell as cab_cell
+import cab.abm.agent as cab_agent
+import cab.ca.cell as cab_cell
 
 from abc import ABCMeta
 from typing import Dict, Tuple, Union

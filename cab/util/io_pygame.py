@@ -7,12 +7,12 @@ import pygame.gfxdraw
 import pygame.locals
 import math
 
-import cab.abm.cab_agent as cab_agent
-import cab.ca.cab_cell as cab_cell
-import cab.util.cab_io_pygame_input as cab_pygame_io
-import cab.util.cab_io_interface as cab_io
-import cab.cab_global_constants as cab_gc
-import cab.util.cab_logging as cab_log
+import cab.abm.agent as cab_agent
+import cab.ca.cell as cab_cell
+import cab.util.io_pygame_input as cab_pygame_io
+import cab.util.io_interface as cab_io
+import cab.global_constants as cab_gc
+import cab.util.logging as cab_log
 
 __author__ = 'Michael Wagner'
 

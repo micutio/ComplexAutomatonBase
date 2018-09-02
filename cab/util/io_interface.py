@@ -1,6 +1,6 @@
 __author__ = "Michael Wagner"
 
-import cab.cab_global_constants as cab_gc
+import cab.global_constants as cab_gc
 
 
 class IoInterface:

@@ -4,7 +4,7 @@ as well as the underlying engine.
 """
 
 import time
-import cab.util.cab_logging as cab_log
+import cab.util.logging as cab_log
 
 def timedmethod(method):
     """

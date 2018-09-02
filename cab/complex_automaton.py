@@ -4,15 +4,15 @@ Contains the automaton itself.
 """
 
 
-import cab.cab_global_constants as cab_gc
-import cab.abm.cab_abm as cab_abm
-import cab.ca.cab_ca_rect as ca_rect
-import cab.ca.cab_ca_hex as ca_hex
+import cab.global_constants as cab_gc
+import cab.abm.abm as cab_abm
+import cab.ca.ca_rect as ca_rect
+import cab.ca.ca_hex as ca_hex
 
-import cab.util.cab_io_tk as cab_io_tk
-import cab.util.cab_io_pygame as cab_io_pg
-import cab.util.cab_rng as cab_rng
-import cab.util.cab_logging as cab_log
+import cab.util.io_tk as cab_io_tk
+import cab.util.io_pygame as cab_io_pg
+import cab.util.rng as cab_rng
+import cab.util.logging as cab_log
 
 __author__ = 'Michael Wagner'
 

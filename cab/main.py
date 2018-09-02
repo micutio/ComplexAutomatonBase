@@ -2,8 +2,8 @@
 Exemplary main module of the Complex Automaton Base.
 """
 
-import cab.cab_global_constants as cab_gc
-import cab.cab_system as cab_sys
+import cab.global_constants as cab_gc
+import cab.complex_automaton as cab_sys
 
 __author__ = 'Michael Wagner'
 

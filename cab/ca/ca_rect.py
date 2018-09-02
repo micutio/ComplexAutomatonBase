@@ -5,9 +5,9 @@ Moore and von-Neumann neighborhoods are available.
 
 from typing import Dict, Tuple, Union
 
-import cab.ca.cab_ca as cab_ca
-import cab.abm.cab_agent as cab_agent
-import cab.ca.cab_cell as cab_cell
+import cab.ca.ca as cab_ca
+import cab.abm.agent as cab_agent
+import cab.ca.cell as cab_cell
 
 __author__: str = 'Michael Wagner'
 

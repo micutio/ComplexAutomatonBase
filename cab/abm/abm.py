@@ -4,11 +4,11 @@ This module contains all classes associated with the agent based system,
 except for the agent classes themselves.
 """
 
-import cab.abm.cab_agent as cab_agent
-import cab.ca.cab_ca as cab_ca
-import cab.cab_global_constants as cab_gc
-import cab.util.cab_logging as cab_log
-import cab.util.cab_stats as cab_stats
+import cab.abm.agent as cab_agent
+import cab.ca.ca as cab_ca
+import cab.global_constants as cab_gc
+import cab.util.logging as cab_log
+import cab.util.stats as cab_stats
 
 __author__ = 'Michael Wagner'
 
