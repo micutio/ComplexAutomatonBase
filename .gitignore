@@ -4,3 +4,5 @@ inst
 .idea
 __pycache__
 MANIFEST
+.ropeproject
+.vscode
