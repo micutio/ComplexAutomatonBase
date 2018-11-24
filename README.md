@@ -59,3 +59,5 @@ A fleshed out tutorial will be added eventually of course.
 - create unit tests
 - use dataclass decorator where appropriate
 - look into zipapp and other ways of packing & distribution
+- use itertools.product instead of nexted loops and re-watch https://www.youtube.com/watch?v=OSGv2VnC0go
+- convert this todo-list into github issues
