@@ -74,6 +74,10 @@ class ComplexAutomaton:
               "\n ".format(self.gc.TITLE, self.gc.VERSION))
 
     def reset_simulation(self):
+        """
+        Re-call the initializers for ABM and CA to reset the CAB completely.
+        TODO: Improve this, as not everything that can be modified is reset.
+        """
         cab_log.info('resetting simulation')
         self.abm.__init__(self.gc, proto_agent=self.proto_agent)
         self.ca.__init__(self, proto_cell=self.proto_cell)
@@ -86,7 +90,7 @@ class ComplexAutomaton:
 
     def run_main_loop(self):
         """
-        Main method. It executes the CA.
+        Main method. Hand over simulation control to the GUI and run from there.
         """
         print("simulation log:")
         print()
