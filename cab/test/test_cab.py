@@ -6,7 +6,10 @@ from cab.global_constants import GlobalConstants
 import unittest
 
 class GeneralTestCase(unittest.TestCase):
-    """Tests for CAB System"""
+    """
+    Tests for CAB System
+    TODO: Add function to advance the ca by n steps and compare the output with expected values.
+    """
 
     def test_startup(self):
         gc = GlobalConstants()
