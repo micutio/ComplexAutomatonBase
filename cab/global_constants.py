@@ -7,9 +7,9 @@ __author__ = 'Michael Wagner'
 
 class GlobalConstants:
     def __init__(self):
-        self.VERSION = "version: 07-2017"
+        self.VERSION = "version: 11-2018"
         self.TITLE = "TITLE"
-        self.gui = "TK"  # Options: "TK", "PyGame"
+        self.GUI = None  # Options: "TK", "PyGame"
         ################################
         #     SIMULATION CONSTANTS     #
         ################################
