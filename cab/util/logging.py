@@ -55,17 +55,17 @@ def set_log_fatal():
 
 def trace(msg: str):
     if log_db['current'] <= LogLevel.TRACE:
-        print('[trace  ] ' + msg)
+        print('[trace]   ' + msg)
 
 
 def debug(msg: str):
     if log_db['current'] <= LogLevel.DEBUG:
-        print('[debug  ] ' + msg)
+        print('[debug]   ' + msg)
 
 
 def info(msg: str):
     if log_db['current'] <= LogLevel.INFO:
-        print('[info   ] ' + msg)
+        print('[info]    ' + msg)
 
 
 def warning(msg: str):
@@ -75,9 +75,9 @@ def warning(msg: str):
 
 def error(msg: str):
     if log_db['current'] <= LogLevel.ERROR:
-        print('[error  ] ' + msg, file=sys.stderr)
+        print('[error]   ' + msg, file=sys.stderr)
 
 
 def fatal(msg: str):
     if log_db['current'] <= LogLevel.FATAL:
-        print('[fatal  ] ' + msg, file=sys.stderr)
+        print('[fatal]   ' + msg, file=sys.stderr)
