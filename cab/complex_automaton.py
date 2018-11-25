@@ -9,9 +9,6 @@ import cab.abm.abm as cab_abm
 import cab.ca.ca_rect as ca_rect
 import cab.ca.ca_hex as ca_hex
 
-import cab.util.io_headless as cab_io_hl
-import cab.util.io_tk as cab_io_tk
-import cab.util.io_pygame as cab_io_pg
 import cab.util.rng as cab_rng
 import cab.util.logging as cab_log
 
@@ -65,13 +62,16 @@ class ComplexAutomaton:
 
         # Check for the UI that we want to use.
         if self.gc.GUI == None:
+            import cab.util.io_headless as cab_io_hl
             cab_log.trace('[ComplexAutomaton] initializing headless CLI')
             # TODO: Make num steps (=100) variable.
             self.visualizer = cab_io_hl.IoHeadless(self.gc, self, 100)
         elif self.gc.GUI == "TK":
+            import cab.util.io_tk as cab_io_tk
             cab_log.trace('[ComplexAutomaton] initializing Tk IO')
             self.visualizer = cab_io_tk.TkIO(self.gc, self)
         elif self.gc.GUI == "PyGame":
+            import cab.util.io_pygame as cab_io_pg
             cab_log.trace('[ComplexAutomaton] initializing Pygame IO')
             self.visualizer = cab_io_pg.PygameIO(self.gc, self)
         self.display_info()
