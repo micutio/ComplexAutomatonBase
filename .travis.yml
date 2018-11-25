@@ -3,4 +3,9 @@ python:
     - 3.4
     - 3.5
     - 3.6
-script: python3 -m unittest
+before_install:
+    - "pip install -U pip"
+    - "python setup.py install"
+script: 
+    - "python3 -m unittest"
+#    - "nosetests --with-coverage --cover-package"
