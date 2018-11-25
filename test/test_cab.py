@@ -11,7 +11,7 @@ class GeneralTestCase(unittest.TestCase):
     def test_startup(self):
         gc = GlobalConstants()
         simulation = ComplexAutomaton(gc)
-        self.assertTrue(True)
+        self.assertTrue(simulation)
 
 if __name__ == '__main__':
     unittest.main()
