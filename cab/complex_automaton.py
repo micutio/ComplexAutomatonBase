@@ -11,6 +11,7 @@ import cab.ca.ca_hex as ca_hex
 
 import cab.util.rng as cab_rng
 import cab.util.logging as cab_log
+import cab.util.stats as cab_stats
 
 __author__ = 'Michael Wagner'
 
@@ -20,6 +21,7 @@ class ComplexAutomaton:
     The main class of Sugarscape. This controls everything.
     """
 
+    @cab_stats.timedmethod
     def __init__(self, global_constants: cab_gc.GlobalConstants, **kwargs):
         """
         Standard initializer.

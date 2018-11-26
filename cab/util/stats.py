@@ -10,6 +10,13 @@ def timedmethod(method):
     """
     Decorator for methods. Enables timing of the method execution.
     Taken from https://medium.com/pythonhive/python-decorator-to-measure-the-execution-time-of-methods-fa04cb6bb36d
+    Example execution:
+        @timedmethod
+        def get_all_employee_details(**kwargs):
+            print 'employee details'
+        
+        logtime_data = {}
+        employees = Employee.get_all_employee_details(log_time=logtime_data)
     """
     def timed(*args, **kw):
         t_start = time.time()
