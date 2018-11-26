@@ -296,5 +296,5 @@ class TkInputActions:
         """
         _q = (self.mx * math.sqrt(3) / 3 - self.my / 3)  # / self.core.gc.CELL_SIZE
         _r = self.my * 2 / 3  # / self.core.gc.CELL_SIZE
-        cell_q, cell_r = cab_ca.CAHex.hex_round(int(_q), int(_r))
+        cell_q, cell_r = cab_ca.CAHex.hex_round(_q, _r)
         return cell_q, cell_r

@@ -220,8 +220,8 @@ class CAHex(cab_ca.CabCA):
         """
         return cab_rng.get_RNG().choice(list(self.ca_grid.keys()))
 
-    @staticmethod
-    def hex_round(q: int, r: int) -> Tuple[int, int]:
+    @staticmethod  # TODO: Get the input types right!
+    def hex_round(q, r) -> Tuple[int, int]:
         """
         Round a hex coordinate to the nearest hex coordinate.
         :param q: Hex coordinate q.
