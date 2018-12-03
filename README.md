@@ -53,9 +53,7 @@ A fleshed out tutorial will be added eventually of course.
 
 ## TODOs
 
-- a logger to easily select between normal and debug console output
 - type annotations in the source code, for better readability
-- use *configparser* to outsource simulation configs from python files to text config files
 - create unit tests
 - use dataclass decorator where appropriate
 - look into zipapp and other ways of packing & distribution
