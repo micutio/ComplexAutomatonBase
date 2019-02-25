@@ -57,6 +57,7 @@ A fleshed out tutorial will be added eventually of course.
 - create unit tests
 - use dataclass decorator where appropriate
 - look into zipapp and other ways of packing & distribution
-- use itertools.product instead of nexted loops and re-watch https://www.youtube.com/watch?v=OSGv2VnC0go
+- use itertools.product instead of nested loops and re-watch https://www.youtube.com/watch?v=OSGv2VnC0go
+- use iterators and generators for querying cells and agents
 - convert this todo-list into github issues
 - consult https://docs.python.org/3/library/profile.html to profile simulation
