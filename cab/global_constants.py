@@ -28,6 +28,7 @@ class GlobalConstants:
         self.GRID_WIDTH = self.DIM_X * self.CELL_SIZE
         self.GRID_HEIGHT = self.DIM_Y * self.CELL_SIZE
         self.DEFAULT_CELL_COLOR = (34, 42, 48)
+        self.DEFAULT_GRID_COLOR = (0, 0, 0)
         ################################
         # Specifically for Rect. CAs   #
         ################################

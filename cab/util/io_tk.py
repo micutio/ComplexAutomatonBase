@@ -78,7 +78,7 @@ class TkIO(cab_io.IoInterface):
 
                 col_f = self.get_color_string(agent.color)
                 if self.gc.DISPLAY_GRID:
-                    col_o = self.get_color_string((0, 0, 0))
+                    col_o = self.get_color_string(self.gc.DEFAULT_GRID_COLOR)
                 else:
                     col_o = self.get_color_string(agent.color)
                 circle = self.canvas.create_oval([x1, y1, x2, y2], fill=col_f, outline=col_o)
