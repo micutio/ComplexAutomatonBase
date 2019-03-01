@@ -55,7 +55,7 @@ class ABM:
         # cab_log.trace("[ABM] dead agents = {0}".format(self.dead_agents))
 
         for agent in self.dead_agents:
-            cab_log.trace("[ABM] removing agent {0}".format(agent))
+            cab_log.trace("[ABM] removing agent {0} from position {1},{2}".format(agent, agent.x, agent.y))
             self.remove_agent(agent)
 
         self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
