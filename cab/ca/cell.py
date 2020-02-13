@@ -14,6 +14,7 @@ class CACell(metaclass=ABCMeta):
     """
     This class models one cell of the CA, while the grid itself will be a dictionary of ClassCell instances.
     """
+
     def __init__(self, x, y, gc):
         self.x = x
         self.y = y
@@ -82,12 +83,13 @@ class CellRect(CACell):
         self.w = gc.CELL_SIZE
         self.h = gc.CELL_SIZE
         self.set_corners()
-        
+
     def set_corners(self):
         self.corners = []
         self.corners.append((self.x * self.w, self.y * self.h))
         self.corners.append((self.x * self.w + self.w, self.y * self.h))
-        self.corners.append((self.x * self.w + self.w, self.y * self.h + self.h))
+        self.corners.append(
+            (self.x * self.w + self.w, self.y * self.h + self.h))
         self.corners.append((self.x * self.w, self.y * self.h + self.h))
 
     def clone(self, x, y):
@@ -110,15 +112,13 @@ class CellHex(CACell):
         super().__init__(x, y, gc)
         self.h = gc.CELL_SIZE * 2
         self.vert = self.h * (3 / 4)
-        self.w = self.h * (math.sqrt(3) / 2)     
+        self.w = self.h * (math.sqrt(3) / 2)
         self.horiz = self.w
         self.q = x
         self.r = y
         self.z = -self.q - self.r
         self.rectangular = False
         self.c_size = gc.CELL_SIZE
-
-        # self.directions = [(1, -1,  0), (1,  0, -1), ( 0, 1, -1), (-1, 1,  0), (-1,  0, 1), ( 0, -1, 1)]
 
         self.corners = []
         self.set_corners()
@@ -127,14 +127,11 @@ class CellHex(CACell):
         self.corners = []
         for i in range(6):
             angle = 2 * math.pi / 6 * (i + 0.5)
-            
+
             x = (self.x * self.horiz) + self.c_size * math.cos(angle)
             offset = self.y * (self.horiz / 2)
 
             y = (self.y * self.vert) + self.c_size * math.sin(angle)
-            # offset = 1
-            # print('x = {0}, y = {1}, offset = {2}'.format(x, y, offset))
-            # corners.append((x + offset, y))
             self.corners.append((int(x) + int(offset), int(y)))
 
     def get_cube(self):

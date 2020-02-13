@@ -22,16 +22,6 @@ class CabCA(metaclass=ABCMeta):
         self.proto_cell = proto_cell
         self.cab_sys = cab_sys
 
-    # Common Interface for all CA classes
-
-    # def draw_cells(self):
-    #     """
-    #     Simply iterating over all cells and calling their draw() method.
-    #     """
-    #     draw = self.visualizer.draw_cell
-    #     for cell in self.ca_grid.values():
-    #         draw(cell)
-
     def cycle_automaton(self):
         """
         This method updates the cellular automaton

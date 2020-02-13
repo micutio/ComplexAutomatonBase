@@ -48,16 +48,6 @@ class CARect(cab_ca.CabCA):
             self.init_von_neumann()
             self.init_von_neumann_borders()
 
-    # Common Interface for all CA classes
-
-    # def draw_cells(self):
-    #     """
-    #     Simply iterating over all cells and calling their draw() method.
-    #     """
-    #     draw = self.visualizer.draw_cell
-    #     for cell in self.ca_grid.values():
-    #         draw(cell)
-
     def cycle_automaton(self):
         """
         This method updates the cellular automaton
@@ -124,17 +114,21 @@ class CARect(cab_ca.CabCA):
         w = self.width
         h = self.height
         for y in range(1, self.height - 1):
-            neighbors_vn = [self.ca_grid[0, (y - 1)], self.ca_grid[0, (y + 1)], self.ca_grid[1, y]]
+            neighbors_vn = [
+                self.ca_grid[0, (y - 1)], self.ca_grid[0, (y + 1)], self.ca_grid[1, y]]
             self.ca_grid[0, y].set_neighbors(neighbors_vn)
 
-            neighbors_vn = [self.ca_grid[(w - 1), (y - 1)], self.ca_grid[(w - 1), (y + 1)], self.ca_grid[(w - 2), y]]
+            neighbors_vn = [self.ca_grid[(
+                w - 1), (y - 1)], self.ca_grid[(w - 1), (y + 1)], self.ca_grid[(w - 2), y]]
             self.ca_grid[(w - 1), y].set_neighbors(neighbors_vn)
 
         for x in range(1, self.width - 1):
-            neighbors_vn = [self.ca_grid[x, 1], self.ca_grid[(x - 1), 0], self.ca_grid[(x + 1), 0]]
+            neighbors_vn = [self.ca_grid[x, 1],
+                            self.ca_grid[(x - 1), 0], self.ca_grid[(x + 1), 0]]
             self.ca_grid[x, 0].set_neighbors(neighbors_vn)
 
-            neighbors_vn = [self.ca_grid[x, (h - 2)], self.ca_grid[(x - 1), (h - 1)], self.ca_grid[(x + 1), (h - 1)]]
+            neighbors_vn = [
+                self.ca_grid[x, (h - 2)], self.ca_grid[(x - 1), (h - 1)], self.ca_grid[(x + 1), (h - 1)]]
             self.ca_grid[x, (h - 1)].set_neighbors(neighbors_vn)
 
         # top left corner
@@ -150,7 +144,8 @@ class CARect(cab_ca.CabCA):
         self.ca_grid[0, (h - 1)].set_neighbors(neighbors_vn)
 
         # bottom right corner
-        neighbors_vn = [self.ca_grid[(w - 1), (h - 2)], self.ca_grid[(w - 2), (h - 1)]]
+        neighbors_vn = [
+            self.ca_grid[(w - 1), (h - 2)], self.ca_grid[(w - 2), (h - 1)]]
         self.ca_grid[(w - 1), (h - 1)].set_neighbors(neighbors_vn)
 
     def init_moore(self):
@@ -200,17 +195,21 @@ class CARect(cab_ca.CabCA):
             self.ca_grid[x, (h - 1)].set_neighbors(neighbors_mo)
 
         # top left corner
-        neighbors_mo = [self.ca_grid[0, 1], self.ca_grid[1, 0], self.ca_grid[1, 1]]
+        neighbors_mo = [self.ca_grid[0, 1],
+                        self.ca_grid[1, 0], self.ca_grid[1, 1]]
         self.ca_grid[0, 0].set_neighbors(neighbors_mo)
 
         # top right corner
-        neighbors_mo = [self.ca_grid[(w - 1), 1], self.ca_grid[(w - 2), 0], self.ca_grid[(w - 2), 1]]
+        neighbors_mo = [
+            self.ca_grid[(w - 1), 1], self.ca_grid[(w - 2), 0], self.ca_grid[(w - 2), 1]]
         self.ca_grid[(w - 1), 0].set_neighbors(neighbors_mo)
 
         # bottom left corner
-        neighbors_mo = [self.ca_grid[0, (h - 2)], self.ca_grid[1, (h - 1)], self.ca_grid[1, (h - 2)]]
+        neighbors_mo = [
+            self.ca_grid[0, (h - 2)], self.ca_grid[1, (h - 1)], self.ca_grid[1, (h - 2)]]
         self.ca_grid[0, (h - 1)].set_neighbors(neighbors_mo)
 
         # bottom right corner
-        neighbors_mo = [self.ca_grid[(w - 1), (h - 2)], self.ca_grid[(w - 2), (h - 1)], self.ca_grid[(w - 2), (h - 2)]]
+        neighbors_mo = [self.ca_grid[(
+            w - 1), (h - 2)], self.ca_grid[(w - 2), (h - 1)], self.ca_grid[(w - 2), (h - 2)]]
         self.ca_grid[(w - 1), (h - 1)].set_neighbors(neighbors_mo)

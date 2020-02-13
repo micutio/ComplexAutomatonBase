@@ -92,14 +92,6 @@ class CAHex(cab_ca.CabCA):
                     cell.neighbors.append(self.ca_grid[new_x, y])
                     # print("neighbor {0},{1} becomes {2},{3}".format(x, y, new_x, y))
 
-    # def draw_cells(self):
-    #     """
-    #     Iterate over all cells and call their draw() method.
-    #     """
-    #     draw = self.visualizer.draw_cell
-    #     for cell in self.ca_grid.values():
-    #         draw(cell)
-
     def cycle_automaton(self):
         """
         Update the cellular automaton.
@@ -146,8 +138,6 @@ class CAHex(cab_ca.CabCA):
         """
         if dist is None:
             dist = 1
-        # x = int(agent_x / self.cell_size)
-        # y = int(agent_y / self.cell_size)
         neighborhood = {}
 
         # This is the new hexagonal neighborhood detection with variable range of vision.
@@ -171,7 +161,7 @@ class CAHex(cab_ca.CabCA):
                     neighborhood[new_x, y] = neigh_cell
         return neighborhood
 
-    def get_agent_neighborhood(self, agent_x: int , agent_y: int, dist: int) -> \
+    def get_agent_neighborhood(self, agent_x: int, agent_y: int, dist: int) -> \
             Dict[Tuple[int, int], Tuple[cab_cell.CellHex, Union[bool, cab_agent.CabAgent]]]:
         """
         Creates a dictionary {'position': (cell, set(agents on that cell))} where position is an (x,y) tuple
@@ -210,7 +200,8 @@ class CAHex(cab_ca.CabCA):
         # This is the slimmed down version that also considers wrapping around ca borders.
         # print('neighborhood items: {0}'.format(list(neighborhood.items())))
         # print('other_agents items: {0}'.format(list(other_agents.items())))
-        neighborhood = {key: value for key, value in neighborhood.items() if key not in other_agents}
+        neighborhood = {key: value for key,
+                        value in neighborhood.items() if key not in other_agents}
         return neighborhood
 
     def get_random_valid_position(self) -> Tuple[int, int]:
@@ -220,7 +211,7 @@ class CAHex(cab_ca.CabCA):
         """
         return cab_rng.get_RNG().choice(list(self.ca_grid.keys()))
 
-    @staticmethod  # TODO: Get the input types right!
+    @staticmethod  # TODO: Get the input type hints right!
     def hex_round(q: float, r: float) -> Tuple[int, int]:
         """
         Round a hex coordinate to the nearest hex coordinate.

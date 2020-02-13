@@ -13,7 +13,6 @@ import cab.util.stats as cab_stats
 __author__ = 'Michael Wagner'
 
 
-# TODO: include choice between cells inhabitable by only one or multiple agents at once.
 class ABM:
     def __init__(self, gc: cab_gc.GlobalConstants, proto_agent: cab_agent.CabAgent=None):
         """
@@ -55,10 +54,12 @@ class ABM:
         # cab_log.trace("[ABM] dead agents = {0}".format(self.dead_agents))
 
         for agent in self.dead_agents:
-            cab_log.trace("[ABM] removing agent {0} from position {1},{2}".format(agent, agent.x, agent.y))
+            cab_log.trace("[ABM] removing agent {0} from position {1},{2}".format(
+                agent, agent.x, agent.y))
             self.remove_agent(agent)
 
-        self.agent_set = set([agent for agent in self.agent_set if not agent.dead])
+        self.agent_set = set(
+            [agent for agent in self.agent_set if not agent.dead])
         # cab_log.trace("[ABM] agent set = {0}".format(self.agent_set))
 
         self.schedule_new_agents()
@@ -70,16 +71,19 @@ class ABM:
         if self.gc.ONE_AGENT_PER_CELL:
             self.agent_locations.pop((agent.prev_x, agent.prev_y))
             self.agent_locations[agent.x, agent.y] = agent
-            cab_log.trace("[ABM] moving agent from = {0}, {1}".format(agent.prev_x, agent.prev_y))
+            cab_log.trace("[ABM] moving agent from = {0}, {1}".format(
+                agent.prev_x, agent.prev_y))
         else:
             self.agent_locations[agent.prev_x, agent.prev_y].remove(agent)
             if not self.agent_locations[agent.prev_x, agent.prev_y]:
-                cab_log.trace("[ABM] position {0}, {1} empty, removing from location map".format(agent.prev_x, agent.prev_y))
+                cab_log.trace("[ABM] position {0}, {1} empty, removing from location map".format(
+                    agent.prev_x, agent.prev_y))
                 self.agent_locations.pop((agent.prev_x, agent.prev_y))
             try:
                 self.agent_locations[agent.x, agent.y].add(agent)
             except KeyError:
-                self.agent_locations[agent.x, agent.y] = {agent}  # set([agent])
+                self.agent_locations[agent.x, agent.y] = {
+                    agent}  # set([agent])
 
     def add_agent(self, agent: cab_agent.CabAgent):
         """
@@ -97,7 +101,8 @@ class ABM:
                     self.agent_locations[pos].add(agent)
                 else:
                     self.agent_locations[pos] = {agent}
-        cab_log.trace("[ABM] agent added to position {0}, {1}".format(agent.x, agent.y))
+        cab_log.trace(
+            "[ABM] agent added to position {0}, {1}".format(agent.x, agent.y))
 
     def schedule_new_agents(self):
         """
@@ -106,17 +111,6 @@ class ABM:
         for agent in self.new_agents:
             # pos = (agent.x, agent.y)
             self.agent_set.add(agent)
-            # if agent.x is not None and agent.y is not None:
-            #     if self.gc.ONE_AGENT_PER_CELL:
-            #         if pos not in self.agent_locations:
-            #             self.agent_locations[pos] = agent
-            #         # Can't insert agent if cell is already occupied.
-            #     else:
-            #         if pos in self.agent_locations:
-            #             self.agent_locations[pos].add(agent)
-            #         else:
-            #             self.agent_locations[pos] = {agent}
-        # self.new_agents = list()
             cab_log.trace("[ABM] agent {0} scheduled by the ABM".format(agent))
 
     def remove_agent(self, agent: cab_agent.CabAgent):
@@ -130,11 +124,3 @@ class ABM:
             self.agent_locations[agent.x, agent.y].discard(agent)
             if len(self.agent_locations[agent.x, agent.y]) == 0:
                 del(self.agent_locations[agent.x, agent.y])
-
-    # def draw_agents(self):
-    #     """
-    #     Iterates over all agents and hands them over to the visualizer.
-    #     """
-    #     draw = self.visualizer.draw_agent
-    #     for a in self.agent_set:
-    #         draw(a)
