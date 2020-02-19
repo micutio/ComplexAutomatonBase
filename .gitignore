@@ -1,9 +1,11 @@
 build
 dist
 inst
-.idea
-__pycache__
 MANIFEST
+__pycache__
+ComplexAutomatonBase\.egg-info/
+
+.mypy_cache
+.idea
 .ropeproject
 .vscode
-ComplexAutomatonBase\.egg-info/
